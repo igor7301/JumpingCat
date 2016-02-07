@@ -37,6 +37,7 @@ public class JumpingCat extends ApplicationAdapter {
     private final float roofOffsetVelocityX = 5;
     private float healthX;
     private float healthY;
+    boolean[] roofCompleted = new boolean[numberOfRoofs];
 
     boolean gameIsRunning;
     boolean gameOver;
@@ -48,6 +49,7 @@ public class JumpingCat extends ApplicationAdapter {
     private final int jumpDecrease = 2; //снижение способности прыгать когда ешь еду
     private Circle healthCircle;
     private boolean healthCollision;
+    private int progressCounter;
 
 
     @Override
@@ -57,6 +59,7 @@ public class JumpingCat extends ApplicationAdapter {
         healthCollision = false;
         descentVelocity = 0;
         jumpSize = 40f;
+        progressCounter = 0;
 
         shapeRenderer = new ShapeRenderer();
         birdCircle = new Circle();
@@ -70,6 +73,7 @@ public class JumpingCat extends ApplicationAdapter {
             roofX[i] = i * distanceBetweenRoof;
             roofY[i] = new Random(System.currentTimeMillis()).nextInt(Gdx.graphics.getHeight() / 5);
             roofRectangle[i] = new Rectangle();
+            roofCompleted[i] = false;
 
         }
 
@@ -147,6 +151,15 @@ public class JumpingCat extends ApplicationAdapter {
                             birdY -= descentVelocity;
 
                         }
+
+                        if (!roofCompleted[i]){
+                           roofCompleted[i] = true;
+                            progressCounter++;
+                        }
+
+
+
+
                         break;
                     }
                 }
@@ -156,6 +169,8 @@ public class JumpingCat extends ApplicationAdapter {
             }
 
 
+
+
             //меняем состояние птицы чтобы крыльями махала
             if (birdState == 0) {
                 birdState = 1;
@@ -163,8 +178,9 @@ public class JumpingCat extends ApplicationAdapter {
                 birdState = 0;
             }
 
+
             healthX -= roofOffsetVelocityX;
-            if(healthX + health.getWidth() < 0) {
+            if (healthX + health.getWidth() < 0) {
                 healthX = distanceBetweenHealth;
                 healthY = Gdx.graphics.getHeight() / 2;
                 healthCollision = false;
@@ -175,14 +191,23 @@ public class JumpingCat extends ApplicationAdapter {
             for (int i = 0; i < numberOfRoofs; i++) {
                 roofX[i] -= roofOffsetVelocityX;
 
-                //если крыша ушла за экран то вместо нее рисуем новую после последней крыши
+                //если крыша полностью ушла за экран то вместо нее рисуем новую после последней крыши
                 if (roofX[i] + roof[i].getWidth() < 0) {
                     roofX[i] = roofX[numberOfRoofs - 1] + (i + 1) * distanceBetweenRoof;
                     roofY[i] = getRandomRoofY();
+                    roofCompleted[i] = false;
 
                 }
 
+
+
+
+
             }
+            Gdx.app.log("Progress", "" + progressCounter);
+
+
+
 
             //если eда ушла за экран то вместо нее рисуем новую после последней еды
             for (int i = 0; i < numberOfFood; i++) {
@@ -228,10 +253,9 @@ public class JumpingCat extends ApplicationAdapter {
                 if (!gameOver) {
                     gameIsRunning = true;
 
-                }
-                else {
+                } else {
                     //если игра закончена начинаем игру заново
-                  create();
+                    create();
                 }
 
             }
@@ -264,7 +288,7 @@ public class JumpingCat extends ApplicationAdapter {
         }
         healthCircle.set(healthX + health.getWidth() / 2, healthY + health.getHeight() / 2, health.getHeight() / 2);
 
-        if(!healthCollision) {
+        if (!healthCollision) {
             batch.draw(health, healthX, healthY, health.getWidth(), health.getHeight());
         }
         batch.end();
