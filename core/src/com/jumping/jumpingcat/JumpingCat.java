@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.Intersector;
 
 public class JumpingCat extends ApplicationAdapter {
     public static final float FULL_JUMP_SIZE = 40f;
+    public static final int DELAY_BETWEEN_CHARACTER_ACTIONS = 0;
     SpriteBatch batch;
     Texture background;
     Texture gameOverTexture;
@@ -41,6 +42,7 @@ public class JumpingCat extends ApplicationAdapter {
     private final int distanceBetweenHealth = 2000;
     private final int jumpDecrease = 2; //снижение способности прыгать когда ешь еду
     private int progressCounter;
+    private int currentCharacterDelay;
 
 
     @Override
@@ -156,12 +158,18 @@ public class JumpingCat extends ApplicationAdapter {
 
 
             //меняем состояние птицы чтобы крыльями махала
-            if (birdState == 0) {
-                birdState = 1;
-            } else {
-                birdState = 0;
+            if (currentCharacterDelay < DELAY_BETWEEN_CHARACTER_ACTIONS) {
+                currentCharacterDelay++;
             }
-
+            else {
+                currentCharacterDelay = 0;
+                if (birdState == 0) {
+                    birdState = 1;
+                }
+                else {
+                    birdState = 0;
+                }
+            }
 
             health.decreaseX(roofOffsetVelocityX);
             //если health ушло за границы экрана
