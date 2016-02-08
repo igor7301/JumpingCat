@@ -14,6 +14,7 @@ public class JumpingCat extends ApplicationAdapter {
     public static final float FULL_JUMP_SIZE = 40f;
     SpriteBatch batch;
     Texture background;
+    Texture gameOverTexture;
     Health health;
     Texture[] bird = new Texture[2];
     ShapeRenderer shapeRenderer;
@@ -88,6 +89,7 @@ public class JumpingCat extends ApplicationAdapter {
         birdY = Gdx.graphics.getHeight() / 2 - bird[birdState].getHeight() / 2;
         birdX = Gdx.graphics.getWidth() / 2 - bird[birdState].getWidth() / 2;
 
+        gameOverTexture = new Texture("gameover.png");
 
     }
 
@@ -275,6 +277,12 @@ public class JumpingCat extends ApplicationAdapter {
 
         scoringFont.draw(batch, String.valueOf(progressCounter), 100, 200);
         weightFont.draw(batch, String.valueOf((int)(jumpSize * 100 / FULL_JUMP_SIZE)), Gdx.graphics.getWidth() - 150, Gdx.graphics.getHeight() - 50);
+
+        if (gameOver) {
+            batch.draw(gameOverTexture, Gdx.graphics.getWidth() / 2 - gameOverTexture.getWidth() / 2,
+                    Gdx.graphics.getHeight() / 2  - gameOverTexture.getHeight() / 2);
+        }
+
         batch.end();
 
 //        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
