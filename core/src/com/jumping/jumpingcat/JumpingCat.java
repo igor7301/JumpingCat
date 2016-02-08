@@ -2,16 +2,16 @@ package com.jumping.jumpingcat;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Rectangle;
-
-import java.util.Random;
 
 public class JumpingCat extends ApplicationAdapter {
+    public static final float FULL_JUMP_SIZE = 40f;
     SpriteBatch batch;
     Texture background;
     Health health;
@@ -21,6 +21,8 @@ public class JumpingCat extends ApplicationAdapter {
     private int birdState;
     private float birdY;
     private float birdX;
+    BitmapFont scoringFont;
+    BitmapFont weightFont;
 
     private final int numberOfRoofs = 4;
     private final int numberOfFood = 4;
@@ -45,11 +47,20 @@ public class JumpingCat extends ApplicationAdapter {
         gameIsRunning = false;
         gameOver = false;
         descentVelocity = 0;
-        jumpSize = 40f;
+        jumpSize = FULL_JUMP_SIZE;
         progressCounter = 0;
 
         shapeRenderer = new ShapeRenderer();
         birdCircle = new Circle();
+        scoringFont = new BitmapFont();
+        weightFont = new BitmapFont();
+
+        scoringFont.setColor(Color.WHITE);
+        weightFont.setColor(Color.WHITE);
+
+        scoringFont.getData().setScale(10);
+        weightFont.getData().setScale(5);
+
 
 
         batch = new SpriteBatch();
@@ -261,6 +272,9 @@ public class JumpingCat extends ApplicationAdapter {
         if (!health.getCollisionWithCharacter()) {
             batch.draw(health, health.getX(), health.getY(), health.getWidth(), health.getHeight());
         }
+
+        scoringFont.draw(batch, String.valueOf(progressCounter), 100, 200);
+        weightFont.draw(batch, String.valueOf((int)(jumpSize * 100 / FULL_JUMP_SIZE)), Gdx.graphics.getWidth() - 150, Gdx.graphics.getHeight() - 50);
         batch.end();
 
 //        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
