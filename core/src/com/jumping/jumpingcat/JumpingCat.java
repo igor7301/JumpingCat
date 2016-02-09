@@ -12,8 +12,8 @@ import com.badlogic.gdx.math.Intersector;
 
 public class JumpingCat extends ApplicationAdapter {
     public static final float FULL_JUMP_SIZE = 40f;
-    public static final int DELAY_BETWEEN_CHARACTER_ACTIONS = 30;
-    public static final int NUMBER_OF_CHARACTERS_STATES = 1;
+    public static final int DELAY_BETWEEN_CHARACTER_ACTIONS = 5;
+    public static final int NUMBER_OF_CHARACTERS_STATES = 8;
     SpriteBatch batch;
     Texture background;
     Texture gameOverTexture;
@@ -88,13 +88,13 @@ public class JumpingCat extends ApplicationAdapter {
 
 
         bird[0] = new Texture("dog1.png");
-//        bird[1] = new Texture("dog2.png");
-//        bird[2] = new Texture("dog3.png");
-//        bird[3] = new Texture("dog4.png");
-//        bird[4] = new Texture("dog5.png");
-//        bird[5] = new Texture("dog6.png");
-//        bird[6] = new Texture("dog7.png");
-//        bird[7] = new Texture("dog8.png");
+        bird[1] = new Texture("dog2.png");
+        bird[2] = new Texture("dog3.png");
+        bird[3] = new Texture("dog4.png");
+        bird[4] = new Texture("dog5.png");
+        bird[5] = new Texture("dog6.png");
+        bird[6] = new Texture("dog7.png");
+        bird[7] = new Texture("dog8.png");
         birdY = Gdx.graphics.getHeight() / 2 - bird[birdState].getHeight() / 2;
         birdX = Gdx.graphics.getWidth() / 2 - bird[birdState].getWidth() / 2;
 
