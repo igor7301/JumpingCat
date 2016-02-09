@@ -12,12 +12,13 @@ import com.badlogic.gdx.math.Intersector;
 
 public class JumpingCat extends ApplicationAdapter {
     public static final float FULL_JUMP_SIZE = 40f;
-    public static final int DELAY_BETWEEN_CHARACTER_ACTIONS = 0;
+    public static final int DELAY_BETWEEN_CHARACTER_ACTIONS = 30;
+    public static final int NUMBER_OF_CHARACTERS_STATES = 1;
     SpriteBatch batch;
     Texture background;
     Texture gameOverTexture;
     Health health;
-    Texture[] bird = new Texture[2];
+    Texture[] bird = new Texture[NUMBER_OF_CHARACTERS_STATES];
     ShapeRenderer shapeRenderer;
     Circle birdCircle;
     private int birdState;
@@ -86,8 +87,14 @@ public class JumpingCat extends ApplicationAdapter {
         health.setY(Gdx.graphics.getHeight() / 2);
 
 
-        bird[0] = new Texture("bird.png");
-        bird[1] = new Texture("bird2.png");
+        bird[0] = new Texture("dog1.png");
+//        bird[1] = new Texture("dog2.png");
+//        bird[2] = new Texture("dog3.png");
+//        bird[3] = new Texture("dog4.png");
+//        bird[4] = new Texture("dog5.png");
+//        bird[5] = new Texture("dog6.png");
+//        bird[6] = new Texture("dog7.png");
+//        bird[7] = new Texture("dog8.png");
         birdY = Gdx.graphics.getHeight() / 2 - bird[birdState].getHeight() / 2;
         birdX = Gdx.graphics.getWidth() / 2 - bird[birdState].getWidth() / 2;
 
@@ -163,12 +170,25 @@ public class JumpingCat extends ApplicationAdapter {
             }
             else {
                 currentCharacterDelay = 0;
-                if (birdState == 0) {
-                    birdState = 1;
+                for (int  i = 0; i < NUMBER_OF_CHARACTERS_STATES; i++) {
+                    //если это последнее возможное состояние
+                    if(birdState == NUMBER_OF_CHARACTERS_STATES - 1) {
+                        birdState = 0;
+                    }
+                    //иначе устанавливаем следующее состояние
+                    else if (birdState == i) {
+                        birdState = i + 1;
+                        break;
+                    }
+
                 }
-                else {
-                    birdState = 0;
-                }
+
+//                if (birdState == 0) {
+//                    birdState = 1;
+//                }
+//                else {
+//                    birdState = 0;
+//                }
             }
 
             health.decreaseX(roofOffsetVelocityX);
@@ -297,11 +317,11 @@ public class JumpingCat extends ApplicationAdapter {
 //        shapeRenderer.setColor(Color.RED);
 //        shapeRenderer.circle(birdCircle.x, birdCircle.y, birdCircle.radius);
 //        for (int i = 0; i < numberOfRoofs; i++) {
-//            shapeRenderer.rect(roofRectangle[i].x, roofRectangle[i].y, roofRectangle[i].width, roofRectangle[i].height);
+//            shapeRenderer.rect(roof[i].getRectangleBounds().x, roof[i].getRectangleBounds().y, roof[i].getRectangleBounds().width, roof[i].getRectangleBounds().height);
 //
 //        }
 //        for (int i = 0; i < numberOfFood; i++) {
-//            shapeRenderer.circle(foodCircle[i].x, foodCircle[i].y, foodCircle[i].radius);
+//            shapeRenderer.circle(food[i].getCircleBounds().x, food[i].getCircleBounds().y, food[i].getCircleBounds().radius);
 //
 //        }
 //        shapeRenderer.end();
