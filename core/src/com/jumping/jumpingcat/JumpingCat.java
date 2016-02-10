@@ -70,12 +70,7 @@ public class JumpingCat extends ApplicationAdapter {
         batch = new SpriteBatch();
         background = new Texture("bg.png");
 
-        for (int i = 0; i < numberOfRoofs; i++) {
-            roof[i] = new Roof("roof.png");
-            roof[i].setX(i * distanceBetweenRoof);
-            roof[i].setY(Roof.getRandomY());
 
-        }
 
         for (int i = 0; i < numberOfFood; i++) {
             food[i] = new Food("food.png");
@@ -98,6 +93,16 @@ public class JumpingCat extends ApplicationAdapter {
         birdY = Gdx.graphics.getHeight() / 2 - bird[birdState].getHeight() / 2;
         birdX = Gdx.graphics.getWidth() / 2 - bird[birdState].getWidth() / 2;
 
+
+        for (int i = 0; i < numberOfRoofs; i++) {
+            roof[i] = new Roof("ground.png");
+            roof[i].setX(i * distanceBetweenRoof);
+            roof[i].setY(Roof.getRandomY(roof[i]));
+            if ( i == 0 ) {
+                roof[i].setY((int)(birdY - roof[i].getHeight()));
+            }
+
+        }
         gameOverTexture = new Texture("gameover.png");
 
     }
@@ -207,7 +212,7 @@ public class JumpingCat extends ApplicationAdapter {
                 //если крыша полностью ушла за экран то вместо нее рисуем новую после последней крыши
                 if (roof[i].getX() + roof[i].getWidth() < 0) {
                     roof[i].setX(roof[numberOfRoofs - 1].getX() + (i + 1) * distanceBetweenRoof);
-                    roof[i].setY(Roof.getRandomY());
+                    roof[i].setY(Roof.getRandomY(roof[i]));
                     roof[i].setRoofCompleted(false);
 
                 }

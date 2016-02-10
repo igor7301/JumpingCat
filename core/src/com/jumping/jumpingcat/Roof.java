@@ -45,9 +45,9 @@ public class Roof extends Texture {
         return this;
     }
 
-    public static int getRandomY() {
-        int minY = 0;
-        int dispersionY = Gdx.graphics.getHeight() / 5;
+    public static int getRandomY(Roof roof) {
+        int minY =  - roof.getHeight() + 50 ;
+        int dispersionY = roof.getHeight() / 2;
         return minY + new Random(System.currentTimeMillis()).nextInt(dispersionY);
     }
 
