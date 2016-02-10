@@ -11,9 +11,10 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 
 public class JumpingCat extends ApplicationAdapter {
-    public static final float FULL_JUMP_SIZE = 40f;
+    public static final float FULL_JUMP_SIZE = 50f;
     public static final int DELAY_BETWEEN_CHARACTER_ACTIONS = 5;
     public static final int NUMBER_OF_CHARACTERS_STATES = 8;
+    public static final int GAME_SPEED_OFFSET_X = 8;
     SpriteBatch batch;
     Texture background;
     Texture gameOverTexture;
@@ -21,7 +22,7 @@ public class JumpingCat extends ApplicationAdapter {
     Texture[] bird = new Texture[NUMBER_OF_CHARACTERS_STATES];
     ShapeRenderer shapeRenderer;
     Circle birdCircle;
-    private int birdState;
+    private int characterState;
     private float birdY;
     private float birdX;
     BitmapFont scoringFont;
@@ -32,27 +33,28 @@ public class JumpingCat extends ApplicationAdapter {
 
     Food[] food = new Food[numberOfFood];
     Ground[] ground = new Ground[numberOfFood];
-    private final int roofOffsetVelocityX = 5;
+    private int gameOffsetVelocityX;
 
     boolean gameIsRunning;
     boolean gameOver;
     float descentVelocity;
     private float jumpSize;
-    private final int distanceBetweenRoof = 1200;
-    private final int distanceBetweenFood = 900;
+    private final int distanceBetweenGround = 1300;
+    private final int distanceBetweenFood = 1500;
     private final int distanceBetweenHealth = 2000;
     private final int jumpDecrease = 2; //снижение способности прыгать когда ешь еду
+    private final int speedDecrease = 1; //снижение скорости когда ешь еду
     private int progressCounter;
     private int currentCharacterDelay;
 
 
-    @Override
-    public void create() {
+    public void init() {
         gameIsRunning = false;
         gameOver = false;
         descentVelocity = 0;
         jumpSize = FULL_JUMP_SIZE;
         progressCounter = 0;
+        gameOffsetVelocityX = GAME_SPEED_OFFSET_X;
 
         shapeRenderer = new ShapeRenderer();
         birdCircle = new Circle();
@@ -90,13 +92,13 @@ public class JumpingCat extends ApplicationAdapter {
         bird[5] = new Texture("dog6.png");
         bird[6] = new Texture("dog7.png");
         bird[7] = new Texture("dog8.png");
-        birdY = Gdx.graphics.getHeight() / 2 - bird[birdState].getHeight() / 2;
-        birdX = Gdx.graphics.getWidth() / 2 - bird[birdState].getWidth() / 2;
+        birdY = Gdx.graphics.getHeight() / 2 - bird[characterState].getHeight() / 2;
+        birdX = Gdx.graphics.getWidth() / 2 - bird[characterState].getWidth() / 2;
 
 
         for (int i = 0; i < numberOfRoofs; i++) {
             ground[i] = new Ground("ground.png");
-            ground[i].setX(i * distanceBetweenRoof);
+            ground[i].setX(i * distanceBetweenGround);
             ground[i].setY(Ground.getRandomY(ground[i]));
             if ( i == 0 ) {
                 ground[i].setY((int) (birdY - ground[i].getHeight()));
@@ -105,6 +107,12 @@ public class JumpingCat extends ApplicationAdapter {
         }
         gameOverTexture = new Texture("gameover.png");
 
+
+    }
+
+    @Override
+    public void create() {
+        init();
     }
 
 
@@ -124,9 +132,9 @@ public class JumpingCat extends ApplicationAdapter {
             if (birdY > 0 || descentVelocity < 0) {
 
                 //чтобы не велезать за верхнюю часть экрана
-                if (birdY + bird[birdState].getHeight() >= Gdx.graphics.getHeight()) {
-                    descentVelocity = 0;
-                }
+//                if (birdY + bird[characterState].getHeight() >= Gdx.graphics.getHeight()) {
+//                    descentVelocity = 0;
+//                }
 
                 //птица падает
                 descentVelocity++;
@@ -177,26 +185,20 @@ public class JumpingCat extends ApplicationAdapter {
                 currentCharacterDelay = 0;
                 for (int  i = 0; i < NUMBER_OF_CHARACTERS_STATES; i++) {
                     //если это последнее возможное состояние
-                    if(birdState == NUMBER_OF_CHARACTERS_STATES - 1) {
-                        birdState = 0;
+                    if(characterState == NUMBER_OF_CHARACTERS_STATES - 1) {
+                        characterState = 0;
                     }
                     //иначе устанавливаем следующее состояние
-                    else if (birdState == i) {
-                        birdState = i + 1;
+                    else if (characterState == i) {
+                        characterState = i + 1;
                         break;
                     }
 
                 }
 
-//                if (birdState == 0) {
-//                    birdState = 1;
-//                }
-//                else {
-//                    birdState = 0;
-//                }
             }
 
-            health.decreaseX(roofOffsetVelocityX);
+            health.decreaseX(gameOffsetVelocityX);
             //если health ушло за границы экрана
             if (health.getX() + health.getWidth() < 0) {
                 health.setX(distanceBetweenHealth);
@@ -207,11 +209,11 @@ public class JumpingCat extends ApplicationAdapter {
 
             //крыши бегут непрерывно
             for (int i = 0; i < numberOfRoofs; i++) {
-                ground[i].decreaseX(roofOffsetVelocityX);
+                ground[i].decreaseX(gameOffsetVelocityX);
 
                 //если крыша полностью ушла за экран то вместо нее рисуем новую после последней крыши
                 if (ground[i].getX() + ground[i].getWidth() < 0) {
-                    ground[i].setX(ground[numberOfRoofs - 1].getX() + (i + 1) * distanceBetweenRoof);
+                    ground[i].setX(ground[numberOfRoofs - 1].getX() + (i + 1) * distanceBetweenGround);
                     ground[i].setY(Ground.getRandomY(ground[i]));
                     ground[i].setGroundCompleted(false);
 
@@ -226,7 +228,7 @@ public class JumpingCat extends ApplicationAdapter {
 
             //если eда ушла за экран то вместо нее рисуем новую после последней еды
             for (int i = 0; i < numberOfFood; i++) {
-                food[i].decreaseX(roofOffsetVelocityX);
+                food[i].decreaseX(gameOffsetVelocityX);
 
                 if (food[i].getX() + food[i].getHeight() < 0) {
                     food[i]
@@ -244,6 +246,7 @@ public class JumpingCat extends ApplicationAdapter {
                     if (!food[i].getCollisionWithCharacter()) {
 
                         jumpSize -= jumpDecrease;
+                        gameOffsetVelocityX -= speedDecrease;
                         food[i].setCollisionWithCharacter(true);
                     }
 
@@ -255,6 +258,7 @@ public class JumpingCat extends ApplicationAdapter {
                 if (!health.getCollisionWithCharacter()) {
 
                     jumpSize += jumpDecrease;
+                    gameOffsetVelocityX += speedDecrease;
                     health.setCollisionWithCharacter(true);
                 }
 
@@ -271,22 +275,19 @@ public class JumpingCat extends ApplicationAdapter {
 
                 } else {
                     //если игра закончена начинаем игру заново
-                    create();
+                    init();
                 }
 
             }
         }
 
-        birdCircle.set(birdX + bird[birdState].getWidth() / 2,
-                birdY + bird[birdState].getHeight() / 2, bird[birdState].getWidth() / 2);
+        birdCircle.set(birdX + bird[characterState].getWidth() / 2,
+                birdY + bird[characterState].getHeight() / 2, bird[characterState].getWidth() / 2);
 
 
         batch.begin();
         batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        batch.draw(bird[birdState],
-                birdX,
-                birdY,
-                bird[birdState].getWidth(), bird[birdState].getHeight());
+
 
         for (int i = 0; i < numberOfRoofs; i++) {
             batch.draw(ground[i], ground[i].getX(), ground[i].getY(), ground[i].getWidth(), ground[i].getHeight());
@@ -309,7 +310,13 @@ public class JumpingCat extends ApplicationAdapter {
         }
 
         scoringFont.draw(batch, String.valueOf(progressCounter), 100, 200);
-        weightFont.draw(batch, String.valueOf((int)(jumpSize * 100 / FULL_JUMP_SIZE)), Gdx.graphics.getWidth() - 150, Gdx.graphics.getHeight() - 50);
+        weightFont.draw(batch, "Jump " + String.valueOf((int) (jumpSize * 100 / FULL_JUMP_SIZE)), Gdx.graphics.getWidth() - 350, Gdx.graphics.getHeight() - 50);
+        weightFont.draw(batch, "Speed " + String.valueOf((int) (gameOffsetVelocityX * 100 / GAME_SPEED_OFFSET_X)), 50, Gdx.graphics.getHeight() - 50);
+
+        batch.draw(bird[characterState],
+                birdX,
+                birdY,
+                bird[characterState].getWidth(), bird[characterState].getHeight());
 
         if (gameOver) {
             batch.draw(gameOverTexture, Gdx.graphics.getWidth() / 2 - gameOverTexture.getWidth() / 2,

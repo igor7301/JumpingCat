@@ -45,7 +45,7 @@ public class Ground extends Texture {
 
     public static int getRandomY(Ground ground) {
         int minY =  - ground.getHeight() + 50 ;
-        int dispersionY = ground.getHeight() / 2;
+        int dispersionY = ground.getHeight();
         return minY + new Random(System.currentTimeMillis()).nextInt(dispersionY);
     }
 
