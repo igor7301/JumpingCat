@@ -150,8 +150,8 @@ public class JumpingCat extends ApplicationAdapter {
 
                         }
 
-                        if (!ground[i].getRoofCompleted()){
-                            ground[i].setRoofCompleted(true);
+                        if (!ground[i].getGroundCompleted()){
+                            ground[i].setGroundCompleted(true);
                             progressCounter++;
                         }
 
@@ -213,7 +213,7 @@ public class JumpingCat extends ApplicationAdapter {
                 if (ground[i].getX() + ground[i].getWidth() < 0) {
                     ground[i].setX(ground[numberOfRoofs - 1].getX() + (i + 1) * distanceBetweenRoof);
                     ground[i].setY(Ground.getRandomY(ground[i]));
-                    ground[i].setRoofCompleted(false);
+                    ground[i].setGroundCompleted(false);
 
                 }
 

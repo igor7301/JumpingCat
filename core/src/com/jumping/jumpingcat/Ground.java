@@ -55,11 +55,11 @@ public class Ground extends Texture {
 
 
 
-    public boolean getRoofCompleted() {
+    public boolean getGroundCompleted() {
         return roofCompleted;
     }
 
-    public void setRoofCompleted(boolean roofCompleted) {
+    public void setGroundCompleted(boolean roofCompleted) {
         this.roofCompleted = roofCompleted;
     }
 
