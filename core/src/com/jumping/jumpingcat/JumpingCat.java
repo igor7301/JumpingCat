@@ -31,7 +31,7 @@ public class JumpingCat extends ApplicationAdapter {
     private final int numberOfFood = 4;
 
     Food[] food = new Food[numberOfFood];
-    Roof[] roof = new Roof[numberOfFood];
+    Ground[] ground = new Ground[numberOfFood];
     private final int roofOffsetVelocityX = 5;
 
     boolean gameIsRunning;
@@ -95,11 +95,11 @@ public class JumpingCat extends ApplicationAdapter {
 
 
         for (int i = 0; i < numberOfRoofs; i++) {
-            roof[i] = new Roof("ground.png");
-            roof[i].setX(i * distanceBetweenRoof);
-            roof[i].setY(Roof.getRandomY(roof[i]));
+            ground[i] = new Ground("ground.png");
+            ground[i].setX(i * distanceBetweenRoof);
+            ground[i].setY(Ground.getRandomY(ground[i]));
             if ( i == 0 ) {
-                roof[i].setY((int)(birdY - roof[i].getHeight()));
+                ground[i].setY((int) (birdY - ground[i].getHeight()));
             }
 
         }
@@ -134,10 +134,10 @@ public class JumpingCat extends ApplicationAdapter {
 
                 for (int i = 0; i < numberOfRoofs; i++) {
 
-                    float roofTopY = roof[i].getRectangleBounds().y + roof[i].getRectangleBounds().height;
+                    float roofTopY = ground[i].getRectangleBounds().y + ground[i].getRectangleBounds().height;
                     //если птица касается крыши сверху
-                    if (Intersector.overlaps(birdCircle, roof[i].getRectangleBounds())
-                            && birdCircle.y >= roofTopY && birdCircle.x > roof[i].getRectangleBounds().x) {
+                    if (Intersector.overlaps(birdCircle, ground[i].getRectangleBounds())
+                            && birdCircle.y >= roofTopY && birdCircle.x > ground[i].getRectangleBounds().x) {
 
                         //то она остается на крыше
                         descentVelocity = 0;
@@ -150,8 +150,8 @@ public class JumpingCat extends ApplicationAdapter {
 
                         }
 
-                        if (!roof[i].getRoofCompleted()){
-                            roof[i].setRoofCompleted(true);
+                        if (!ground[i].getRoofCompleted()){
+                            ground[i].setRoofCompleted(true);
                             progressCounter++;
                         }
 
@@ -207,13 +207,13 @@ public class JumpingCat extends ApplicationAdapter {
 
             //крыши бегут непрерывно
             for (int i = 0; i < numberOfRoofs; i++) {
-                roof[i].decreaseX(roofOffsetVelocityX);
+                ground[i].decreaseX(roofOffsetVelocityX);
 
                 //если крыша полностью ушла за экран то вместо нее рисуем новую после последней крыши
-                if (roof[i].getX() + roof[i].getWidth() < 0) {
-                    roof[i].setX(roof[numberOfRoofs - 1].getX() + (i + 1) * distanceBetweenRoof);
-                    roof[i].setY(Roof.getRandomY(roof[i]));
-                    roof[i].setRoofCompleted(false);
+                if (ground[i].getX() + ground[i].getWidth() < 0) {
+                    ground[i].setX(ground[numberOfRoofs - 1].getX() + (i + 1) * distanceBetweenRoof);
+                    ground[i].setY(Ground.getRandomY(ground[i]));
+                    ground[i].setRoofCompleted(false);
 
                 }
 
@@ -289,8 +289,8 @@ public class JumpingCat extends ApplicationAdapter {
                 bird[birdState].getWidth(), bird[birdState].getHeight());
 
         for (int i = 0; i < numberOfRoofs; i++) {
-            batch.draw(roof[i], roof[i].getX(), roof[i].getY(), roof[i].getWidth(), roof[i].getHeight());
-            roof[i].setRectangleBounds(roof[i].getX(), roof[i].getY(), roof[i].getWidth(), roof[i].getHeight());
+            batch.draw(ground[i], ground[i].getX(), ground[i].getY(), ground[i].getWidth(), ground[i].getHeight());
+            ground[i].setRectangleBounds(ground[i].getX(), ground[i].getY(), ground[i].getWidth(), ground[i].getHeight());
         }
 
         for (int i = 0; i < numberOfFood; i++) {
@@ -322,7 +322,7 @@ public class JumpingCat extends ApplicationAdapter {
 //        shapeRenderer.setColor(Color.RED);
 //        shapeRenderer.circle(birdCircle.x, birdCircle.y, birdCircle.radius);
 //        for (int i = 0; i < numberOfRoofs; i++) {
-//            shapeRenderer.rect(roof[i].getRectangleBounds().x, roof[i].getRectangleBounds().y, roof[i].getRectangleBounds().width, roof[i].getRectangleBounds().height);
+//            shapeRenderer.rect(ground[i].getRectangleBounds().x, ground[i].getRectangleBounds().y, ground[i].getRectangleBounds().width, ground[i].getRectangleBounds().height);
 //
 //        }
 //        for (int i = 0; i < numberOfFood; i++) {

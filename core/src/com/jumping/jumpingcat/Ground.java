@@ -1,8 +1,6 @@
 package com.jumping.jumpingcat;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 
 import java.util.Random;
@@ -10,7 +8,7 @@ import java.util.Random;
 /**
  * Created by ikomarov on 08.02.2016.
  */
-public class Roof extends Texture {
+public class Ground extends Texture {
 
     private int x;
     private int y;
@@ -18,7 +16,7 @@ public class Roof extends Texture {
     boolean roofCompleted;
 
 
-    public Roof(String internalPath) {
+    public Ground(String internalPath) {
         super(internalPath);
     }
 
@@ -27,7 +25,7 @@ public class Roof extends Texture {
         return x;
     }
 
-    public Roof setX(int x) {
+    public Ground setX(int x) {
         this.x = x;
         return this;
     }
@@ -40,14 +38,14 @@ public class Roof extends Texture {
         return y;
     }
 
-    public Roof setY(int y) {
+    public Ground setY(int y) {
         this.y = y;
         return this;
     }
 
-    public static int getRandomY(Roof roof) {
-        int minY =  - roof.getHeight() + 50 ;
-        int dispersionY = roof.getHeight() / 2;
+    public static int getRandomY(Ground ground) {
+        int minY =  - ground.getHeight() + 50 ;
+        int dispersionY = ground.getHeight() / 2;
         return minY + new Random(System.currentTimeMillis()).nextInt(dispersionY);
     }
 
