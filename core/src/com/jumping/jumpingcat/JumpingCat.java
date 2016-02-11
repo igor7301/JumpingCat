@@ -11,6 +11,9 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 
 public class JumpingCat extends ApplicationAdapter {
+
+
+
     public static  float SCREEN_HEIGHT;
     public static  float SCREEN_WEIDHT;
     private static float SCREEN_DIMENSION;
@@ -67,6 +70,13 @@ public class JumpingCat extends ApplicationAdapter {
     private int progressCounter;
     private int currentCharacterDelay;
 
+
+    private IActivityRequestHandler myRequestHandler;
+
+    // Добавляем конструктор
+    public JumpingCat(IActivityRequestHandler handler) {
+        myRequestHandler = handler;
+    }
 
     public void init() {
 
@@ -146,11 +156,14 @@ public class JumpingCat extends ApplicationAdapter {
     @Override
     public void create() {
         init();
+        myRequestHandler.showAdMob(true);
+        //myRequestHandler.showAdMob(false);
     }
 
 
     @Override
     public void render() {
+        myRequestHandler.showAdMob(true);
 
         if (gameIsRunning) {
 
