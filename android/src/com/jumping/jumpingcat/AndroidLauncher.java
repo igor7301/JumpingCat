@@ -13,6 +13,7 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.jumping.jumpingcat.JumpingCat;
 
 
@@ -23,6 +24,8 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
 
     protected AdView adView;
     protected View gameView;
+    protected InterstitialAd mInterstitialAd;
+    private AdRequest adRequestInterstisial;
 
     protected AdView banner;
 
@@ -39,7 +42,7 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getWindow().clearFlags( WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 
         //представление для LibGDX
         gameView = initializeForView(new JumpingCat(this), config);
@@ -51,10 +54,14 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
         adView.setAdUnitId("ca-app-pub-7135211728909018/4468793488");
         adView.setAdSize(AdSize.BANNER);
         //идентификатор_тестового_устройства
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice("emulator-5554").build();
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).addTestDevice("emulator-5554").build();
         adView.loadAd(adRequest);
         //добавление представление игрык слою
         layout.addView(gameView);
+
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-7135211728909018/5511547887");
+        adRequestInterstisial = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).addTestDevice("emulator-5554").build();
 
         RelativeLayout.LayoutParams adParams =
                 new RelativeLayout.LayoutParams( RelativeLayout.LayoutParams.WRAP_CONTENT,
@@ -83,9 +90,34 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
         }
     };
 
+    protected Handler handlerInterstitial = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            switch(msg.what) {
+                case SHOW_ADS:
+                    if (mInterstitialAd.isLoaded()) {
+                        mInterstitialAd.show();
+                    }
+                    else {
+                        mInterstitialAd.loadAd(adRequestInterstisial);
+                    }
+                    break;
+
+            }
+        }
+    };
+
+
+
     @Override
     public void showAdMob(boolean show){
         handler.sendEmptyMessage(show ? 1 : 0);
+    }
+
+    @Override
+    public void showAdMobInterstitial(){
+        handlerInterstitial.sendEmptyMessage(1);
     }
 
     @Override
@@ -94,6 +126,7 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
         if (adView != null) {
             adView.resume();
         }
+
     }
 
     @Override

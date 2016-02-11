@@ -150,20 +150,19 @@ public class JumpingCat extends ApplicationAdapter {
         }
         gameOverTexture = new Texture("gameover.png");
 
-
+        myRequestHandler.showAdMob(true);
     }
 
     @Override
     public void create() {
         init();
-        myRequestHandler.showAdMob(true);
-        //myRequestHandler.showAdMob(false);
     }
 
 
     @Override
     public void render() {
         myRequestHandler.showAdMob(true);
+
 
         if (gameIsRunning) {
 
@@ -321,6 +320,8 @@ public class JumpingCat extends ApplicationAdapter {
 
                 } else {
                     //если игра закончена начинаем игру заново
+                    myRequestHandler.showAdMobInterstitial();
+
                     init();
                 }
 
