@@ -7,8 +7,8 @@ import com.badlogic.gdx.math.Circle;
  * Created by ikomarov on 08.02.2016.
  */
 public class Health extends Texture {
-    private int x;
-    private int y;
+    private float x;
+    private float y;
     boolean collisionWithCharacter;
     Circle circle = new Circle();
 
@@ -16,24 +16,24 @@ public class Health extends Texture {
         super(internalPath);
     }
 
-    public int getX() {
+    public float getX() {
         return x;
     }
 
-    public Health setX(int x) {
+    public Health setX(float x) {
         this.x = x;
         return this;
     }
 
-    public void decreaseX(int x) {
+    public void decreaseX(float x) {
         this.x -= x;
     }
 
-    public int getY() {
+    public float getY() {
         return y;
     }
 
-    public Health setY(int y) {
+    public Health setY(float y) {
         this.y = y;
         return this;
     }
@@ -52,7 +52,7 @@ public class Health extends Texture {
         return circle;
     }
 
-    public void setCircleBounds(int x, int y, int radius) {
+    public void setCircleBounds(float x, float y, float radius) {
         this.circle.setX(x);
         this.circle.setY(y);
         this.circle.setRadius(radius);

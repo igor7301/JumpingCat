@@ -10,8 +10,8 @@ import java.util.Random;
  */
 public class Ground extends Texture {
 
-    private int x;
-    private int y;
+    private float x;
+    private float y;
     Rectangle rectangle = new Rectangle();
     boolean roofCompleted;
 
@@ -21,20 +21,20 @@ public class Ground extends Texture {
     }
 
 
-    public int getX() {
+    public float getX() {
         return x;
     }
 
-    public Ground setX(int x) {
+    public Ground setX(float x) {
         this.x = x;
         return this;
     }
 
-    public void decreaseX(int x) {
+    public void decreaseX(float x) {
         this.x -= x;
     }
 
-    public int getY() {
+    public float getY() {
         return y;
     }
 
@@ -63,7 +63,7 @@ public class Ground extends Texture {
         this.roofCompleted = roofCompleted;
     }
 
-    public void setRectangleBounds(int x, int y, int width, int height) {
+    public void setRectangleBounds(float x, float y, float width, float height) {
         this.rectangle.x = x;
         this.rectangle.y = y;
         this.rectangle.width = width;

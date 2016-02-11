@@ -11,10 +11,35 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 
 public class JumpingCat extends ApplicationAdapter {
-    public static final float FULL_JUMP_SIZE = 50f;
+    public static  float SCREEN_HEIGHT;
+    public static  float SCREEN_WEIDHT;
+    private static float SCREEN_DIMENSION;
+
+    public static final float SCORING_TEXT_SIZE = 0.9f; //percent from SCREEN_WEIDHT
+    public static final float INFO_TEXT_SIZE = 0.46f; //percent from SCREEN_WEIDHT
+    private float scoringScale;
+    private float infoScale;
+
+    public static final float FULL_JUMP_SIZE = 2.5f; //percent from SCREEN_HEIGHT
+    public static final float JUMP_DECREASE = 0.1f; //percent from SCREEN_HEIGHT
+    private float currentJumpSize; // текущее значение прыжка
+    private float currentJumpDecrease;//снижение способности прыгать на эту величину
+
+    public static final float GAME_SPEED_X = 0.7f; //скорость движения игры в процентах от SCREEN_WEIDHT
+    public float currentGameSpeedX;
+    private final int speedDecrease = 1; //снижение скорости когда сталкиваешься с ядом. В пикселях потому что 1 будет одинаково для всех разрешений
+
+
+    public static final float DISTANCE_BETWEEN_GROUND = 120f; //расстояние между площадками в процентах от SCREEN_WEIDHT
+    public static final float DISTANCE_BETWEEN_POISON = 139f; //расстояние между ядом в процентах от SCREEN_WEIDHT
+    public static final float DISTANCE_BETWEEN_HEALTH = 185f; //расстояние между здоровьем в процентах от SCREEN_WEIDHT
+    private float distanceBetweenGround; // а это в пикселях
+    private float distanceBetweenPoison;
+    private float distanceBetweenHealth;
+
+
     public static final int DELAY_BETWEEN_CHARACTER_ACTIONS = 5;
     public static final int NUMBER_OF_CHARACTERS_STATES = 8;
-    public static final int GAME_SPEED_OFFSET_X = 8;
     SpriteBatch batch;
     Texture background;
     Texture gameOverTexture;
@@ -26,46 +51,55 @@ public class JumpingCat extends ApplicationAdapter {
     private float birdY;
     private float birdX;
     BitmapFont scoringFont;
-    BitmapFont weightFont;
+    BitmapFont infoFont;
 
     private final int numberOfRoofs = 4;
-    private final int numberOfFood = 4;
+    private final int numberOfPoison = 4;
 
-    Food[] food = new Food[numberOfFood];
-    Ground[] ground = new Ground[numberOfFood];
-    private int gameOffsetVelocityX;
+    Poison[] poison = new Poison[numberOfPoison];
+    Ground[] ground = new Ground[numberOfPoison];
+
 
     boolean gameIsRunning;
     boolean gameOver;
     float descentVelocity;
-    private float jumpSize;
-    private final int distanceBetweenGround = 1300;
-    private final int distanceBetweenFood = 1500;
-    private final int distanceBetweenHealth = 2000;
-    private final int jumpDecrease = 2; //снижение способности прыгать когда ешь еду
-    private final int speedDecrease = 1; //снижение скорости когда ешь еду
+
     private int progressCounter;
     private int currentCharacterDelay;
 
 
     public void init() {
+
+        SCREEN_HEIGHT = Gdx.graphics.getHeight();
+        SCREEN_WEIDHT = Gdx.graphics.getWidth();
+        SCREEN_DIMENSION = SCREEN_WEIDHT * SCREEN_HEIGHT;
+
+        currentJumpDecrease = JUMP_DECREASE * SCREEN_HEIGHT / 100; //снижение способности прыгать в пикселях
+        currentJumpSize = FULL_JUMP_SIZE *SCREEN_HEIGHT / 100;//размер прыжка в пикселях
+
+        currentGameSpeedX = GAME_SPEED_X * SCREEN_WEIDHT / 100; //  перевод в пиксели
+        distanceBetweenGround = DISTANCE_BETWEEN_GROUND * SCREEN_WEIDHT / 100 ;
+        distanceBetweenPoison = DISTANCE_BETWEEN_POISON * SCREEN_WEIDHT  / 100;
+        distanceBetweenHealth = DISTANCE_BETWEEN_HEALTH * SCREEN_WEIDHT / 100;
+        scoringScale = SCORING_TEXT_SIZE * SCREEN_WEIDHT / 100;
+        infoScale = INFO_TEXT_SIZE * SCREEN_WEIDHT / 100;
+
         gameIsRunning = false;
         gameOver = false;
         descentVelocity = 0;
-        jumpSize = FULL_JUMP_SIZE;
         progressCounter = 0;
-        gameOffsetVelocityX = GAME_SPEED_OFFSET_X;
+
 
         shapeRenderer = new ShapeRenderer();
         birdCircle = new Circle();
         scoringFont = new BitmapFont();
-        weightFont = new BitmapFont();
+        infoFont = new BitmapFont();
 
         scoringFont.setColor(Color.WHITE);
-        weightFont.setColor(Color.WHITE);
+        infoFont.setColor(Color.WHITE);
 
-        scoringFont.getData().setScale(10);
-        weightFont.getData().setScale(5);
+        scoringFont.getData().setScale(scoringScale);
+        infoFont.getData().setScale(infoScale);
 
 
 
@@ -73,10 +107,9 @@ public class JumpingCat extends ApplicationAdapter {
         background = new Texture("bg.png");
 
 
-
-        for (int i = 0; i < numberOfFood; i++) {
-            food[i] = new Food("food.png");
-            food[i].setX(i * distanceBetweenFood).setY(Food.getRandomY());
+        for (int i = 0; i < numberOfPoison; i++) {
+            poison[i] = new Poison("food.png");
+            poison[i].setX(i * distanceBetweenPoison).setY(Poison.getRandomY());
         }
 
         health = new Health("health.png");
@@ -123,7 +156,7 @@ public class JumpingCat extends ApplicationAdapter {
 
 //            //прыгать всегда
 //            if (Gdx.input.justTouched()) {
-//                descentVelocity = -jumpSize;
+//                descentVelocity = -currentJumpSize;
 //                birdY -= descentVelocity;
 //
 //            }
@@ -153,7 +186,7 @@ public class JumpingCat extends ApplicationAdapter {
 
                         //прыгать можно только если птица стоит на крыше
                         if (Gdx.input.justTouched()) {
-                            descentVelocity = -jumpSize;
+                            descentVelocity = -currentJumpSize;
                             birdY -= descentVelocity;
 
                         }
@@ -198,7 +231,7 @@ public class JumpingCat extends ApplicationAdapter {
 
             }
 
-            health.decreaseX(gameOffsetVelocityX);
+            health.decreaseX(currentGameSpeedX);
             //если health ушло за границы экрана
             if (health.getX() + health.getWidth() < 0) {
                 health.setX(distanceBetweenHealth);
@@ -209,7 +242,7 @@ public class JumpingCat extends ApplicationAdapter {
 
             //крыши бегут непрерывно
             for (int i = 0; i < numberOfRoofs; i++) {
-                ground[i].decreaseX(gameOffsetVelocityX);
+                ground[i].decreaseX(currentGameSpeedX);
 
                 //если крыша полностью ушла за экран то вместо нее рисуем новую после последней крыши
                 if (ground[i].getX() + ground[i].getWidth() < 0) {
@@ -221,33 +254,33 @@ public class JumpingCat extends ApplicationAdapter {
 
             }
             Gdx.app.log("Progress", "" + progressCounter);
-            Gdx.app.log("JumpSize", "" + jumpSize);
+            Gdx.app.log("JumpSize", "" + currentJumpSize);
 
 
 
 
             //если eда ушла за экран то вместо нее рисуем новую после последней еды
-            for (int i = 0; i < numberOfFood; i++) {
-                food[i].decreaseX(gameOffsetVelocityX);
+            for (int i = 0; i < numberOfPoison; i++) {
+                poison[i].decreaseX(currentGameSpeedX);
 
-                if (food[i].getX() + food[i].getHeight() < 0) {
-                    food[i]
-                            .setX(food[numberOfFood - 1].getX() + (i + 1) * distanceBetweenFood)
-                            .setY(Food.getRandomY())
+                if (poison[i].getX() + poison[i].getHeight() < 0) {
+                    poison[i]
+                            .setX(poison[numberOfPoison - 1].getX() + (i + 1) * distanceBetweenPoison)
+                            .setY(Poison.getRandomY())
                             .setCollisionWithCharacter(false);
                 }
             }
 
 
             //столкновение с едой
-            for (int i = 0; i < numberOfFood; i++) {
+            for (int i = 0; i < numberOfPoison; i++) {
 
-                if (Intersector.overlaps(birdCircle, food[i].getCircleBounds())) {
-                    if (!food[i].getCollisionWithCharacter()) {
+                if (Intersector.overlaps(birdCircle, poison[i].getCircleBounds())) {
+                    if (!poison[i].getCollisionWithCharacter()) {
 
-                        jumpSize -= jumpDecrease;
-                        gameOffsetVelocityX -= speedDecrease;
-                        food[i].setCollisionWithCharacter(true);
+                        currentJumpSize -= currentJumpDecrease;
+                        currentGameSpeedX -= speedDecrease;
+                        poison[i].setCollisionWithCharacter(true);
                     }
 
                 }
@@ -257,8 +290,8 @@ public class JumpingCat extends ApplicationAdapter {
             if (Intersector.overlaps(birdCircle, health.getCircleBounds())) {
                 if (!health.getCollisionWithCharacter()) {
 
-                    jumpSize += jumpDecrease;
-                    gameOffsetVelocityX += speedDecrease;
+                    currentJumpSize += currentJumpDecrease;
+                    currentGameSpeedX += speedDecrease;
                     health.setCollisionWithCharacter(true);
                 }
 
@@ -294,13 +327,13 @@ public class JumpingCat extends ApplicationAdapter {
             ground[i].setRectangleBounds(ground[i].getX(), ground[i].getY(), ground[i].getWidth(), ground[i].getHeight());
         }
 
-        for (int i = 0; i < numberOfFood; i++) {
-            if (!food[i].getCollisionWithCharacter()) {
-                batch.draw(food[i], food[i].getX(), food[i].getY(), food[i].getWidth(), food[i].getHeight());
+        for (int i = 0; i < numberOfPoison; i++) {
+            if (!poison[i].getCollisionWithCharacter()) {
+                batch.draw(poison[i], poison[i].getX(), poison[i].getY(), poison[i].getWidth(), poison[i].getHeight());
             }
-            food[i].setCircleBounds(food[i].getX() + food[i].getWidth() / 2,
-                    food[i].getY() + food[i].getHeight() / 2,
-                    food[i].getHeight() / 2);
+            poison[i].setCircleBounds(poison[i].getX() + poison[i].getWidth() / 2,
+                    poison[i].getY() + poison[i].getHeight() / 2,
+                    poison[i].getHeight() / 2);
 
         }
         health.setCircleBounds(health.getX() + health.getWidth() / 2, health.getY() + health.getHeight() / 2, health.getHeight() / 2);
@@ -310,8 +343,8 @@ public class JumpingCat extends ApplicationAdapter {
         }
 
         scoringFont.draw(batch, String.valueOf(progressCounter), 100, 200);
-        weightFont.draw(batch, "Jump " + String.valueOf((int) (jumpSize * 100 / FULL_JUMP_SIZE)), Gdx.graphics.getWidth() - 350, Gdx.graphics.getHeight() - 50);
-        weightFont.draw(batch, "Speed " + String.valueOf((int) (gameOffsetVelocityX * 100 / GAME_SPEED_OFFSET_X)), 50, Gdx.graphics.getHeight() - 50);
+        infoFont.draw(batch, "Jump " + String.valueOf((int) (currentJumpSize * 100 / (SCREEN_HEIGHT * FULL_JUMP_SIZE / 100))), Gdx.graphics.getWidth() - 350, Gdx.graphics.getHeight() - 50);
+        infoFont.draw(batch, "Speed " + String.valueOf((int) (currentGameSpeedX * 100 / (SCREEN_WEIDHT * GAME_SPEED_X / 100))), 50, Gdx.graphics.getHeight() - 50);
 
         batch.draw(bird[characterState],
                 birdX,
@@ -332,8 +365,8 @@ public class JumpingCat extends ApplicationAdapter {
 //            shapeRenderer.rect(ground[i].getRectangleBounds().x, ground[i].getRectangleBounds().y, ground[i].getRectangleBounds().width, ground[i].getRectangleBounds().height);
 //
 //        }
-//        for (int i = 0; i < numberOfFood; i++) {
-//            shapeRenderer.circle(food[i].getCircleBounds().x, food[i].getCircleBounds().y, food[i].getCircleBounds().radius);
+//        for (int i = 0; i < numberOfPoison; i++) {
+//            shapeRenderer.circle(poison[i].getCircleBounds().x, poison[i].getCircleBounds().y, poison[i].getCircleBounds().radius);
 //
 //        }
 //        shapeRenderer.end();

@@ -9,15 +9,15 @@ import java.util.Random;
 /**
  * Created by ikomarov on 08.02.2016.
  */
-public class Food extends Texture {
+public class Poison extends Texture {
 
-    private int x;
-    private int y;
+    private float x;
+    private float y;
     boolean collisionWithCharacter;
     Circle circle = new Circle();
 
 
-    public Food(String internalPath) {
+    public Poison(String internalPath) {
         super(internalPath);
     }
 
@@ -27,24 +27,24 @@ public class Food extends Texture {
         return minY + new Random(System.currentTimeMillis()).nextInt(dispersionY);
     }
 
-    public int getX() {
+    public float getX() {
         return x;
     }
 
-    public int getY() {
+    public float getY() {
         return y;
     }
 
-    public Food setX(int x) {
+    public Poison setX(float x) {
         this.x = x;
         return this;
     }
 
-    public void decreaseX(int x) {
+    public void decreaseX(float x) {
         this.x -= x;
     }
 
-    public Food setY(int y) {
+    public Poison setY(int y) {
         this.y = y;
         return this;
     }
@@ -53,7 +53,7 @@ public class Food extends Texture {
         return collisionWithCharacter;
     }
 
-    public Food setCollisionWithCharacter(boolean collisionWithCharacter) {
+    public Poison setCollisionWithCharacter(boolean collisionWithCharacter) {
         this.collisionWithCharacter = collisionWithCharacter;
         return this;
     }
@@ -62,7 +62,7 @@ public class Food extends Texture {
         return circle;
     }
 
-    public void setCircleBounds(int x, int y, int radius) {
+    public void setCircleBounds(float x, float y, float radius) {
         this.circle.setX(x);
         this.circle.setY(y);
         this.circle.setRadius(radius);
