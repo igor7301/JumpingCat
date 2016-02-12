@@ -195,7 +195,7 @@ public class JumpingCat extends ApplicationAdapter {
 
                         //то она остается на крыше
                         descentVelocity = 0;
-                        birdY = roofTopY;
+                        birdY = roofTopY - 1; //чтобы персонаж был чуть ниже области и всегда пересекался с ней
 
                         //прыгать можно только если птица стоит на крыше
                         if (Gdx.input.justTouched()) {
@@ -322,7 +322,7 @@ public class JumpingCat extends ApplicationAdapter {
         }
 
         birdCircle.set(birdX + bird[characterState].getWidth() / 2,
-                birdY + bird[characterState].getHeight() / 2, bird[characterState].getWidth() / 2);
+                birdY + bird[characterState].getHeight() / 2, bird[characterState].getHeight() / 2);
 
 
         batch.begin();
