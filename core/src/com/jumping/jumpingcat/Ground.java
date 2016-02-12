@@ -1,5 +1,6 @@
 package com.jumping.jumpingcat;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
@@ -44,7 +45,8 @@ public class Ground extends Texture {
     }
 
     public static int getRandomY(Ground ground) {
-        int minY =  - ground.getHeight() + 50 ;
+        //переводим проценты в пиксели
+        int minY =  - ground.getHeight() + (int)(5.5f * Gdx.graphics.getHeight() / 100);
         int dispersionY = ground.getHeight();
         return minY + new Random(System.currentTimeMillis()).nextInt(dispersionY);
     }

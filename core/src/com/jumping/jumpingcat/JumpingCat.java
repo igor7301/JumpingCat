@@ -356,9 +356,10 @@ public class JumpingCat extends ApplicationAdapter {
             batch.draw(health, health.getX(), health.getY(), health.getWidth(), health.getHeight());
         }
 
-        scoringFont.draw(batch, String.valueOf(progressCounter), 100, 200);
-        infoFont.draw(batch, "Jump " + String.valueOf((int) (currentJumpSize * 100 / (SCREEN_HEIGHT * FULL_JUMP_SIZE / 100))), Gdx.graphics.getWidth() - 350, Gdx.graphics.getHeight() - 50);
-        infoFont.draw(batch, "Speed " + String.valueOf((int) (currentGameSpeedX * 100 / (SCREEN_WEIDHT * GAME_SPEED_X / 100))), 50, Gdx.graphics.getHeight() - 50);
+        //отступы указаны в процентах
+        scoringFont.draw(batch, String.valueOf(progressCounter), (9.2f * SCREEN_WEIDHT) / 100, 10.4f * SCREEN_HEIGHT / 100);
+        infoFont.draw(batch, "Jump " + String.valueOf((int) (currentJumpSize * 100 / (SCREEN_HEIGHT * FULL_JUMP_SIZE / 100))), Gdx.graphics.getWidth() - (32.4f * SCREEN_WEIDHT / 100), Gdx.graphics.getHeight() - (2.6f * SCREEN_HEIGHT / 100));
+        infoFont.draw(batch, "Speed " + String.valueOf((int) (currentGameSpeedX * 100 / (SCREEN_WEIDHT * GAME_SPEED_X / 100))), 4.6f * SCREEN_WEIDHT / 100, Gdx.graphics.getHeight() - (2.6f * SCREEN_HEIGHT / 100));
 
         batch.draw(bird[characterState],
                 birdX,
