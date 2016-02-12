@@ -13,9 +13,11 @@ import com.badlogic.gdx.math.Intersector;
 public class JumpingCat extends ApplicationAdapter {
 
 
-
-    public static  float SCREEN_HEIGHT;
-    public static  float SCREEN_WEIDHT;
+    public static final String JUMP_TEXT = "Jump";
+    public static final String SPEED_TEXT = "Speed";
+    private static final String SCORE_TEXT = "SCORE";
+    public static float SCREEN_HEIGHT;
+    public static float SCREEN_WEIDHT;
     private static float SCREEN_DIMENSION;
 
     public static final float SCORING_TEXT_SIZE = 0.9f; //percent from SCREEN_WEIDHT
@@ -85,11 +87,11 @@ public class JumpingCat extends ApplicationAdapter {
         SCREEN_DIMENSION = SCREEN_WEIDHT * SCREEN_HEIGHT;
 
         currentJumpDecrease = JUMP_DECREASE * SCREEN_HEIGHT / 100; //снижение способности прыгать в пикселях
-        currentJumpSize = FULL_JUMP_SIZE *SCREEN_HEIGHT / 100;//размер прыжка в пикселях
+        currentJumpSize = FULL_JUMP_SIZE * SCREEN_HEIGHT / 100;//размер прыжка в пикселях
 
         currentGameSpeedX = GAME_SPEED_X * SCREEN_WEIDHT / 100; //  перевод в пиксели
-        distanceBetweenGround = DISTANCE_BETWEEN_GROUND * SCREEN_WEIDHT / 100 ;
-        distanceBetweenPoison = DISTANCE_BETWEEN_POISON * SCREEN_WEIDHT  / 100;
+        distanceBetweenGround = DISTANCE_BETWEEN_GROUND * SCREEN_WEIDHT / 100;
+        distanceBetweenPoison = DISTANCE_BETWEEN_POISON * SCREEN_WEIDHT / 100;
         distanceBetweenHealth = DISTANCE_BETWEEN_HEALTH * SCREEN_WEIDHT / 100;
         scoringScale = SCORING_TEXT_SIZE * SCREEN_WEIDHT / 100;
         infoScale = INFO_TEXT_SIZE * SCREEN_WEIDHT / 100;
@@ -110,7 +112,6 @@ public class JumpingCat extends ApplicationAdapter {
 
         scoringFont.getData().setScale(scoringScale);
         infoFont.getData().setScale(infoScale);
-
 
 
         batch = new SpriteBatch();
@@ -143,7 +144,7 @@ public class JumpingCat extends ApplicationAdapter {
             ground[i] = new Ground("ground.png");
             ground[i].setX(i * distanceBetweenGround);
             ground[i].setY(Ground.getRandomY(ground[i]));
-            if ( i == 0 ) {
+            if (i == 0) {
                 ground[i].setY((int) (birdY - ground[i].getHeight()));
             }
 
@@ -203,12 +204,10 @@ public class JumpingCat extends ApplicationAdapter {
 
                         }
 
-                        if (!ground[i].getGroundCompleted()){
+                        if (!ground[i].getGroundCompleted()) {
                             ground[i].setGroundCompleted(true);
                             progressCounter++;
                         }
-
-
 
 
                         break;
@@ -220,17 +219,14 @@ public class JumpingCat extends ApplicationAdapter {
             }
 
 
-
-
             //меняем состояние птицы чтобы крыльями махала
             if (currentCharacterDelay < DELAY_BETWEEN_CHARACTER_ACTIONS) {
                 currentCharacterDelay++;
-            }
-            else {
+            } else {
                 currentCharacterDelay = 0;
-                for (int  i = 0; i < NUMBER_OF_CHARACTERS_STATES; i++) {
+                for (int i = 0; i < NUMBER_OF_CHARACTERS_STATES; i++) {
                     //если это последнее возможное состояние
-                    if(characterState == NUMBER_OF_CHARACTERS_STATES - 1) {
+                    if (characterState == NUMBER_OF_CHARACTERS_STATES - 1) {
                         characterState = 0;
                     }
                     //иначе устанавливаем следующее состояние
@@ -267,8 +263,6 @@ public class JumpingCat extends ApplicationAdapter {
             }
             Gdx.app.log("Progress", "" + progressCounter);
             Gdx.app.log("JumpSize", "" + currentJumpSize);
-
-
 
 
             //если eда ушла за экран то вместо нее рисуем новую после последней еды
@@ -308,7 +302,6 @@ public class JumpingCat extends ApplicationAdapter {
                 }
 
             }
-
 
 
         } else {
@@ -356,10 +349,6 @@ public class JumpingCat extends ApplicationAdapter {
             batch.draw(health, health.getX(), health.getY(), health.getWidth(), health.getHeight());
         }
 
-        //отступы указаны в процентах
-        scoringFont.draw(batch, String.valueOf(progressCounter), (9.2f * SCREEN_WEIDHT) / 100, 10.4f * SCREEN_HEIGHT / 100);
-        infoFont.draw(batch, "Jump " + String.valueOf((int) (currentJumpSize * 100 / (SCREEN_HEIGHT * FULL_JUMP_SIZE / 100))), Gdx.graphics.getWidth() - (32.4f * SCREEN_WEIDHT / 100), Gdx.graphics.getHeight() - (2.6f * SCREEN_HEIGHT / 100));
-        infoFont.draw(batch, "Speed " + String.valueOf((int) (currentGameSpeedX * 100 / (SCREEN_WEIDHT * GAME_SPEED_X / 100))), 4.6f * SCREEN_WEIDHT / 100, Gdx.graphics.getHeight() - (2.6f * SCREEN_HEIGHT / 100));
 
         batch.draw(bird[characterState],
                 birdX,
@@ -368,7 +357,15 @@ public class JumpingCat extends ApplicationAdapter {
 
         if (gameOver) {
             batch.draw(gameOverTexture, Gdx.graphics.getWidth() / 2 - gameOverTexture.getWidth() / 2,
-                    Gdx.graphics.getHeight() / 2  - gameOverTexture.getHeight() / 2);
+                    Gdx.graphics.getHeight() / 2 - gameOverTexture.getHeight() / 2);
+            infoFont.draw(batch, SCORE_TEXT + " " + String.valueOf(progressCounter), 35f * SCREEN_WEIDHT / 100, 30f * SCREEN_HEIGHT / 100);
+        }
+        else {
+
+            //отступы указаны в процентах
+            scoringFont.draw(batch, String.valueOf(progressCounter), (9.2f * SCREEN_WEIDHT) / 100, 10.4f * SCREEN_HEIGHT / 100);
+            infoFont.draw(batch, JUMP_TEXT + " " + String.valueOf((int) (currentJumpSize * 100 / (SCREEN_HEIGHT * FULL_JUMP_SIZE / 100))), SCREEN_WEIDHT - (32.4f * SCREEN_WEIDHT / 100), SCREEN_HEIGHT - (2.6f * SCREEN_HEIGHT / 100));
+            infoFont.draw(batch, SPEED_TEXT + " " + String.valueOf((int) (currentGameSpeedX * 100 / (SCREEN_WEIDHT * GAME_SPEED_X / 100))), 4.6f * SCREEN_WEIDHT / 100, SCREEN_HEIGHT - (2.6f * SCREEN_HEIGHT / 100));
         }
 
         batch.end();
