@@ -3,14 +3,14 @@ package com.jumping.jumpingcat;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
-
-import java.math.RoundingMode;
 
 public class JumpingCat extends ApplicationAdapter {
 
@@ -47,18 +47,18 @@ public class JumpingCat extends ApplicationAdapter {
     public static final float DESCENT_VELOCITY = 0.056f; //скорость падения героя в процентах SCREEN_HEIGHT
     float descentVelocity; // в пикселях
 
-    public static final int DELAY_BETWEEN_CHARACTER_ACTIONS = 5;
-    public static final int NUMBER_OF_CHARACTERS_STATES = 4;
+    public static final int DELAY_BETWEEN_HERO_ACTIONS = 5;
+    public static final int NUMBER_OF_HERO_STATES = 4;
     SpriteBatch batch;
-    Texture background;
-    Texture gameOverTexture;
+    TextureRegion background;
+    TextureRegion gameOverTexture;
     Health health;
-    Texture[] bird = new Texture[NUMBER_OF_CHARACTERS_STATES];
+    TextureRegion[] hero = new TextureRegion[NUMBER_OF_HERO_STATES];
     ShapeRenderer shapeRenderer;
-    Circle birdCircle;
-    private int characterState;
-    private float birdY;
-    private float birdX;
+    Circle heroCircle;
+    private int heroState;
+    private float heroY;
+    private float heroX;
     BitmapFont scoringFont;
     BitmapFont infoFont;
 
@@ -85,10 +85,12 @@ public class JumpingCat extends ApplicationAdapter {
 
     public void init() {
 
-        SCREEN_HEIGHT = Gdx.graphics.getHeight();
-//        SCREEN_HEIGHT = 1270;
-        SCREEN_WEIDHT = Gdx.graphics.getWidth();
-//        SCREEN_WEIDHT = 820;
+        TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("atlas.pack"));
+
+//        SCREEN_HEIGHT = Gdx.graphics.getHeight();
+        SCREEN_HEIGHT = 1270;
+//        SCREEN_WEIDHT = Gdx.graphics.getWidth();
+        SCREEN_WEIDHT = 820;
         SCREEN_DIMENSION = SCREEN_WEIDHT * SCREEN_HEIGHT;
 
         currentJumpDecrease = JUMP_DECREASE * SCREEN_HEIGHT / 100; //снижение способности прыгать в пикселях
@@ -109,7 +111,7 @@ public class JumpingCat extends ApplicationAdapter {
 
 
         shapeRenderer = new ShapeRenderer();
-        birdCircle = new Circle();
+        heroCircle = new Circle();
         scoringFont = new BitmapFont();
         infoFont = new BitmapFont();
 
@@ -121,46 +123,51 @@ public class JumpingCat extends ApplicationAdapter {
 
 
         batch = new SpriteBatch();
-        background = new Texture("bg.png");
+        background = textureAtlas.findRegion("bg");
 
 
         for (int i = 0; i < numberOfPoison; i++) {
-            poison[i] = new Poison("food.png");
+            poison[i] = new Poison(textureAtlas.findRegion("food"));
             poison[i].setX(i * distanceBetweenPoison).setY(Poison.getRandomY(SCREEN_HEIGHT));
         }
 
-        health = new Health("health.png");
+        health = new Health(textureAtlas.findRegion("health"));
         health.setX(distanceBetweenHealth);
         health.setY(SCREEN_HEIGHT / 2);
 
 
-        bird[0] = new Texture("panda1.png");
-        bird[1] = new Texture("panda2.png");
-        bird[2] = new Texture("panda3.png");
-        bird[3] = new Texture("panda4.png");
-//        bird[1] = new Texture("dog2.png");
-//        bird[2] = new Texture("dog3.png");
-//        bird[3] = new Texture("dog4.png");
-//        bird[4] = new Texture("dog5.png");
-//        bird[5] = new Texture("dog6.png");
-//        bird[6] = new Texture("dog7.png");
-//        bird[7] = new Texture("dog8.png");
-        birdY = SCREEN_HEIGHT / 2 - bird[characterState].getHeight() / 2;
-        birdX = SCREEN_WEIDHT / 2 - bird[characterState].getWidth() / 2;
+        hero[0] = textureAtlas.findRegion("panda1");
+        hero[1] = textureAtlas.findRegion("panda2");
+        hero[2] = textureAtlas.findRegion("panda3");
+        hero[3] = textureAtlas.findRegion("panda4");
+
+        heroY = SCREEN_HEIGHT / 2 - hero[heroState].getRegionHeight() / 2;
+        heroX = SCREEN_WEIDHT / 2 - hero[heroState].getRegionWidth() / 2;
 
 
         for (int i = 0; i < numberOfRoofs; i++) {
-            ground[i] = new Ground("ground.png");
+
+
+
+
+            ground[i] = new Ground(textureAtlas.findRegion("ground"));
+
             ground[i].setX(i * distanceBetweenGround);
             ground[i].setY(Ground.getRandomY(SCREEN_HEIGHT));
             if (i == 0) {
-                ground[i].setY((int) (birdY - ground[i].getHeight()));
+                ground[i].setY((int) (heroY - ground[i].getHeight()));
             }
 
         }
-        gameOverTexture = new Texture("gameover.png");
+        gameOverTexture = textureAtlas.findRegion("gameover");
 
         myRequestHandler.showAdMob(true);
+
+
+
+
+
+
     }
 
     @Override
@@ -179,39 +186,39 @@ public class JumpingCat extends ApplicationAdapter {
 //            //прыгать всегда
 //            if (Gdx.input.justTouched()) {
 //                descentVelocity = -currentJumpSize;
-//                birdY -= descentVelocity;
+//                heroY -= descentVelocity;
 //
 //            }
 
             //если птица выше нижнего экрана
-            if (birdY > 0 || descentVelocity < 0) {
+            if (heroY > 0 || descentVelocity < 0) {
 
                 //чтобы не велезать за верхнюю часть экрана
-//                if (birdY + bird[characterState].getHeight() >= Gdx.graphics.getHeight()) {
+//                if (heroY + hero[heroState].getHeight() >= Gdx.graphics.getHeight()) {
 //                    descentVelocity = 0;
 //                }
 
                 //птица падает
 
                 descentVelocity = descentVelocity + DESCENT_VELOCITY * SCREEN_HEIGHT / 100;
-                birdY -= descentVelocity;
+                heroY -= descentVelocity;
 
                 for (int i = 0; i < numberOfRoofs; i++) {
 
                     float roofTopY = ground[i].getRectangleBounds().y + ground[i].getRectangleBounds().height;
                     //если птица касается крыши сверху
-                    if (Intersector.overlaps(birdCircle, ground[i].getRectangleBounds())
-                            && birdCircle.y >= roofTopY && birdCircle.x > ground[i].getRectangleBounds().x) {
+                    if (Intersector.overlaps(heroCircle, ground[i].getRectangleBounds())
+                            && heroCircle.y >= roofTopY && heroCircle.x > ground[i].getRectangleBounds().x) {
 
                         //то она остается на крыше
                         descentVelocity = 0;
-                        birdY = roofTopY - 1; //чтобы персонаж был чуть ниже области и всегда пересекался с ней
+                        heroY = roofTopY - 1; //чтобы персонаж был чуть ниже области и всегда пересекался с ней
 
                         //прыгать можно только если птица стоит на крыше
                         if (Gdx.input.justTouched()) {
 
                             descentVelocity = -currentJumpSize;
-                            birdY -= descentVelocity;
+                            heroY -= descentVelocity;
                             Gdx.app.log("JUMP", "" + descentVelocity);
 
                         }
@@ -232,18 +239,18 @@ public class JumpingCat extends ApplicationAdapter {
 
 
             //меняем состояние птицы чтобы крыльями махала
-            if (currentCharacterDelay < DELAY_BETWEEN_CHARACTER_ACTIONS) {
+            if (currentCharacterDelay < DELAY_BETWEEN_HERO_ACTIONS) {
                 currentCharacterDelay++;
             } else {
                 currentCharacterDelay = 0;
-                for (int i = 0; i < NUMBER_OF_CHARACTERS_STATES; i++) {
+                for (int i = 0; i < NUMBER_OF_HERO_STATES; i++) {
                     //если это последнее возможное состояние
-                    if (characterState == NUMBER_OF_CHARACTERS_STATES - 1) {
-                        characterState = 0;
+                    if (heroState == NUMBER_OF_HERO_STATES - 1) {
+                        heroState = 0;
                     }
                     //иначе устанавливаем следующее состояние
-                    else if (characterState == i) {
-                        characterState = i + 1;
+                    else if (heroState == i) {
+                        heroState = i + 1;
                         break;
                     }
 
@@ -294,7 +301,7 @@ public class JumpingCat extends ApplicationAdapter {
             //столкновение с едой
             for (int i = 0; i < numberOfPoison; i++) {
 
-                if (Intersector.overlaps(birdCircle, poison[i].getCircleBounds())) {
+                if (Intersector.overlaps(heroCircle, poison[i].getCircleBounds())) {
                     if (!poison[i].getCollisionWithCharacter()) {
 
                         currentJumpSize -= currentJumpDecrease;
@@ -306,7 +313,7 @@ public class JumpingCat extends ApplicationAdapter {
             }
 
             //столкновение с health
-            if (Intersector.overlaps(birdCircle, health.getCircleBounds())) {
+            if (Intersector.overlaps(heroCircle, health.getCircleBounds())) {
                 if (!health.getCollisionWithCharacter()) {
 
                     currentJumpSize += currentJumpDecrease;
@@ -334,22 +341,30 @@ public class JumpingCat extends ApplicationAdapter {
             }
         }
 
-        birdCircle.set(birdX + 0.25f * SCREEN_WEIDHT / 2,
-                birdY + 0.094f * SCREEN_HEIGHT / 2, 0.094f * SCREEN_HEIGHT  / 2);
+        heroCircle.set(heroX + 0.25f * SCREEN_WEIDHT / 2,
+                heroY + 0.094f * SCREEN_HEIGHT / 2, 0.094f * SCREEN_HEIGHT / 2);
+
+
+
+
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 
         batch.begin();
+        batch.disableBlending();
         batch.draw(background, 0, 0, SCREEN_WEIDHT, SCREEN_HEIGHT);
+
+        batch.enableBlending();
 
 
         for (int i = 0; i < numberOfRoofs; i++) {
-            batch.draw(ground[i], ground[i].getX(), ground[i].getY(), 0.83f * SCREEN_WEIDHT, 0.62f * SCREEN_HEIGHT);
+            batch.draw(ground[i].getTextureRegion(), ground[i].getX(), ground[i].getY(), 0.83f * SCREEN_WEIDHT, 0.62f * SCREEN_HEIGHT);
             ground[i].setRectangleBounds(ground[i].getX(), ground[i].getY(), 0.83f * SCREEN_WEIDHT,  0.62f * SCREEN_HEIGHT);
         }
 
         for (int i = 0; i < numberOfPoison; i++) {
             if (!poison[i].getCollisionWithCharacter()) {
-                batch.draw(poison[i], poison[i].getX(), poison[i].getY(), 0.13f * SCREEN_WEIDHT, 0.085f * SCREEN_HEIGHT);
+                batch.draw(poison[i].getTextureRegion(), poison[i].getX(), poison[i].getY(), 0.13f * SCREEN_WEIDHT, 0.085f * SCREEN_HEIGHT);
             }
             poison[i].setCircleBounds(poison[i].getX() + 0.13f * SCREEN_WEIDHT / 2,
                     poison[i].getY() + 0.085f * SCREEN_HEIGHT / 2,
@@ -359,18 +374,19 @@ public class JumpingCat extends ApplicationAdapter {
         health.setCircleBounds(health.getX() + 0.166f * SCREEN_WEIDHT / 2, health.getY() + 0.079f * SCREEN_HEIGHT / 2, 0.079f * SCREEN_HEIGHT / 2);
 
         if (!health.getCollisionWithCharacter()) {
-            batch.draw(health, health.getX(), health.getY(), 0.166f * SCREEN_WEIDHT, 0.079f * SCREEN_HEIGHT);
+            batch.draw(health.getTextureRegion(), health.getX(), health.getY(), 0.166f * SCREEN_WEIDHT, 0.079f * SCREEN_HEIGHT);
         }
 
 
-        batch.draw(bird[characterState],
-                birdX,
-                birdY,
+
+        batch.draw(hero[heroState],
+                heroX,
+                heroY,
                 0.25f * SCREEN_WEIDHT, 0.094f * SCREEN_HEIGHT);
 
         if (gameOver) {
-            batch.draw(gameOverTexture, SCREEN_WEIDHT / 2 - gameOverTexture.getWidth() / 2,
-                    SCREEN_HEIGHT / 2 - gameOverTexture.getHeight() / 2);
+            batch.draw(gameOverTexture, SCREEN_WEIDHT / 2 - gameOverTexture.getRegionWidth() / 2,
+                    SCREEN_HEIGHT / 2 - gameOverTexture.getRegionHeight() / 2);
             infoFont.draw(batch, SCORE_TEXT + " " + String.valueOf(progressCounter), 35f * SCREEN_WEIDHT / 100, 30f * SCREEN_HEIGHT / 100);
         }
         else {
@@ -385,7 +401,7 @@ public class JumpingCat extends ApplicationAdapter {
 
 //        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 //        shapeRenderer.setColor(Color.RED);
-//        shapeRenderer.circle(birdCircle.x, birdCircle.y, birdCircle.radius);
+//        shapeRenderer.circle(heroCircle.x, heroCircle.y, heroCircle.radius);
 //        for (int i = 0; i < numberOfRoofs; i++) {
 //            shapeRenderer.rect(ground[i].getRectangleBounds().x, ground[i].getRectangleBounds().y, ground[i].getRectangleBounds().width, ground[i].getRectangleBounds().height);
 //

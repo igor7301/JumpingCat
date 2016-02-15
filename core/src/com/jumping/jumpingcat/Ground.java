@@ -2,6 +2,7 @@ package com.jumping.jumpingcat;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
 import java.util.Random;
@@ -9,16 +10,17 @@ import java.util.Random;
 /**
  * Created by ikomarov on 08.02.2016.
  */
-public class Ground extends Texture {
+public class Ground  {
 
     private float x;
     private float y;
     Rectangle rectangle = new Rectangle();
     boolean roofCompleted;
+    TextureRegion textureRegion;
 
 
-    public Ground(String internalPath) {
-        super(internalPath);
+    public Ground(TextureRegion textureRegion) {
+       this.textureRegion = textureRegion;
     }
 
 
@@ -77,5 +79,17 @@ public class Ground extends Texture {
         this.rectangle.width = width;
         this.rectangle.height = height;
 
+    }
+
+    public float getHeight() {
+        return textureRegion.getRegionHeight();
+    }
+
+    public float getWidth() {
+        return textureRegion.getRegionWidth();
+    }
+
+    public TextureRegion getTextureRegion() {
+        return textureRegion;
     }
 }

@@ -1,0 +1,68 @@
+
+atlas.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+bg
+  rotate: false
+  xy: 1, 1
+  size: 1080, 1920
+  orig: 1080, 1920
+  offset: 0, 0
+  index: -1
+ground
+  rotate: false
+  xy: 1083, 721
+  size: 900, 1200
+  orig: 900, 1200
+  offset: 0, 0
+  index: -1
+gameover
+  rotate: false
+  xy: 1083, 355
+  size: 458, 364
+  orig: 458, 364
+  offset: 0, 0
+  index: -1
+panda1
+  rotate: false
+  xy: 1083, 172
+  size: 270, 181
+  orig: 270, 181
+  offset: 0, 0
+  index: -1
+panda2
+  rotate: false
+  xy: 1543, 538
+  size: 270, 181
+  orig: 270, 181
+  offset: 0, 0
+  index: -1
+panda3
+  rotate: false
+  xy: 1543, 355
+  size: 270, 181
+  orig: 270, 181
+  offset: 0, 0
+  index: -1
+panda4
+  rotate: false
+  xy: 1355, 172
+  size: 270, 181
+  orig: 270, 181
+  offset: 0, 0
+  index: -1
+health
+  rotate: false
+  xy: 1083, 18
+  size: 180, 152
+  orig: 180, 152
+  offset: 0, 0
+  index: -1
+food
+  rotate: false
+  xy: 1815, 555
+  size: 150, 164
+  orig: 150, 164
+  offset: 0, 0
+  index: -1

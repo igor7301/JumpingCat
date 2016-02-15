@@ -1,19 +1,21 @@
 package com.jumping.jumpingcat;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
 
 /**
  * Created by ikomarov on 08.02.2016.
  */
-public class Health extends Texture {
+public class Health  {
+    private final TextureRegion textureRegion;
     private float x;
     private float y;
     boolean collisionWithCharacter;
     Circle circle = new Circle();
 
-    public Health(String internalPath) {
-        super(internalPath);
+    public Health(TextureRegion textureRegion) {
+        this.textureRegion = textureRegion;
     }
 
     public float getX() {
@@ -56,5 +58,12 @@ public class Health extends Texture {
         this.circle.setX(x);
         this.circle.setY(y);
         this.circle.setRadius(radius);
+    }
+    public TextureRegion getTextureRegion() {
+        return textureRegion;
+    }
+
+    public float getWidth() {
+        return textureRegion.getRegionWidth();
     }
 }

@@ -2,6 +2,7 @@ package com.jumping.jumpingcat;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
 
 import java.util.Random;
@@ -9,16 +10,17 @@ import java.util.Random;
 /**
  * Created by ikomarov on 08.02.2016.
  */
-public class Poison extends Texture {
+public class Poison {
 
+    private final TextureRegion textureRegion;
     private float x;
     private float y;
     boolean collisionWithCharacter;
     Circle circle = new Circle();
 
 
-    public Poison(String internalPath) {
-        super(internalPath);
+    public Poison(TextureRegion textureRegion) {
+        this.textureRegion = textureRegion;
     }
 
     public static int getRandomY(int screenHeight) {
@@ -66,5 +68,12 @@ public class Poison extends Texture {
         this.circle.setX(x);
         this.circle.setY(y);
         this.circle.setRadius(radius);
+    }
+    public TextureRegion getTextureRegion() {
+        return textureRegion;
+    }
+
+    public float getHeight() {
+        return textureRegion.getRegionHeight();
     }
 }
