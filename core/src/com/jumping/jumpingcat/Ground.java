@@ -46,8 +46,9 @@ public class Ground extends Texture {
 
     public static int getRandomY(Ground ground) {
         //переводим проценты в пиксели
-        int minY =  - ground.getHeight() + (int)(5.5f * Gdx.graphics.getHeight() / 100);
-        int dispersionY = ground.getHeight();
+        //// TODO: 15.02.16  Update needed
+        int minY =  (int) (- 0.60f * Gdx.graphics.getHeight());
+        int dispersionY = (int) (Gdx.graphics.getHeight() * 0.5f);
         return minY + new Random(System.currentTimeMillis()).nextInt(dispersionY);
     }
 

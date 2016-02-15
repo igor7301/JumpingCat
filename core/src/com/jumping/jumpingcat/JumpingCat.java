@@ -58,7 +58,7 @@ public class JumpingCat extends ApplicationAdapter {
     BitmapFont scoringFont;
     BitmapFont infoFont;
 
-    private final int numberOfRoofs = 4;
+    private final int numberOfRoofs = 2;
     private final int numberOfPoison = 4;
 
     Poison[] poison = new Poison[numberOfPoison];
@@ -160,12 +160,12 @@ public class JumpingCat extends ApplicationAdapter {
     @Override
     public void create() {
         init();
+        myRequestHandler.showAdMob(true);
     }
 
 
     @Override
     public void render() {
-        myRequestHandler.showAdMob(true);
 
 
         if (gameIsRunning) {
@@ -186,7 +186,9 @@ public class JumpingCat extends ApplicationAdapter {
 //                }
 
                 //птица падает
-                descentVelocity++;
+
+//                descentVelocity = descentVelocity + 0.05f * SCREEN_HEIGHT / 100;
+                descentVelocity ++;
                 birdY -= descentVelocity;
 
                 for (int i = 0; i < numberOfRoofs; i++) {
@@ -202,8 +204,10 @@ public class JumpingCat extends ApplicationAdapter {
 
                         //прыгать можно только если птица стоит на крыше
                         if (Gdx.input.justTouched()) {
+                            //// TODO: 15.02.16 update needed
                             descentVelocity = -currentJumpSize;
                             birdY -= descentVelocity;
+                            Gdx.app.log("JUMP", "" + descentVelocity);
 
                         }
 
@@ -324,39 +328,39 @@ public class JumpingCat extends ApplicationAdapter {
             }
         }
 
-        birdCircle.set(birdX + bird[characterState].getWidth() / 2,
-                birdY + bird[characterState].getHeight() / 2, bird[characterState].getHeight() / 2);
+        birdCircle.set(birdX + 0.25f * SCREEN_WEIDHT / 2,
+                birdY + 0.094f * SCREEN_HEIGHT / 2, 0.094f * SCREEN_HEIGHT  / 2);
 
 
         batch.begin();
-        batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        batch.draw(background, 0, 0, SCREEN_WEIDHT, SCREEN_HEIGHT);
 
 
         for (int i = 0; i < numberOfRoofs; i++) {
-            batch.draw(ground[i], ground[i].getX(), ground[i].getY(), ground[i].getWidth(), ground[i].getHeight());
-            ground[i].setRectangleBounds(ground[i].getX(), ground[i].getY(), ground[i].getWidth(), ground[i].getHeight());
+            batch.draw(ground[i], ground[i].getX(), ground[i].getY(), 0.83f * SCREEN_WEIDHT, 0.62f * SCREEN_HEIGHT);
+            ground[i].setRectangleBounds(ground[i].getX(), ground[i].getY(), 0.83f * SCREEN_WEIDHT,  0.62f * SCREEN_HEIGHT);
         }
 
         for (int i = 0; i < numberOfPoison; i++) {
             if (!poison[i].getCollisionWithCharacter()) {
-                batch.draw(poison[i], poison[i].getX(), poison[i].getY(), poison[i].getWidth(), poison[i].getHeight());
+                batch.draw(poison[i], poison[i].getX(), poison[i].getY(), 0.13f * SCREEN_WEIDHT, 0.085f * SCREEN_HEIGHT);
             }
-            poison[i].setCircleBounds(poison[i].getX() + poison[i].getWidth() / 2,
-                    poison[i].getY() + poison[i].getHeight() / 2,
-                    poison[i].getHeight() / 2);
+            poison[i].setCircleBounds(poison[i].getX() + 0.13f * SCREEN_WEIDHT / 2,
+                    poison[i].getY() + 0.085f * SCREEN_HEIGHT / 2,
+                    0.085f * SCREEN_HEIGHT / 2);
 
         }
-        health.setCircleBounds(health.getX() + health.getWidth() / 2, health.getY() + health.getHeight() / 2, health.getHeight() / 2);
+        health.setCircleBounds(health.getX() + 0.166f * SCREEN_WEIDHT / 2, health.getY() + 0.079f * SCREEN_HEIGHT / 2, 0.079f * SCREEN_HEIGHT / 2);
 
         if (!health.getCollisionWithCharacter()) {
-            batch.draw(health, health.getX(), health.getY(), health.getWidth(), health.getHeight());
+            batch.draw(health, health.getX(), health.getY(), 0.166f * SCREEN_WEIDHT, 0.079f * SCREEN_HEIGHT);
         }
 
 
         batch.draw(bird[characterState],
                 birdX,
                 birdY,
-                bird[characterState].getWidth(), bird[characterState].getHeight());
+                0.25f * SCREEN_WEIDHT, 0.094f * SCREEN_HEIGHT);
 
         if (gameOver) {
             batch.draw(gameOverTexture, Gdx.graphics.getWidth() / 2 - gameOverTexture.getWidth() / 2,
