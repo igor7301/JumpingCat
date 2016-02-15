@@ -21,9 +21,9 @@ public class Poison extends Texture {
         super(internalPath);
     }
 
-    public static int getRandomY() {
-        int minY = Gdx.graphics.getHeight() / 2;
-        int dispersionY = Gdx.graphics.getHeight() / 4;
+    public static int getRandomY(int screenHeight) {
+        int minY = screenHeight / 2;
+        int dispersionY = screenHeight / 4;
         return minY + new Random(System.currentTimeMillis()).nextInt(dispersionY);
     }
 

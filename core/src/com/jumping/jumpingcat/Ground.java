@@ -44,12 +44,17 @@ public class Ground extends Texture {
         return this;
     }
 
-    public static int getRandomY(Ground ground) {
+    public static int getRandomY(int screenHeight) {
         //переводим проценты в пиксели
         //// TODO: 15.02.16  Update needed
-        int minY =  (int) (- 0.60f * Gdx.graphics.getHeight());
-        int dispersionY = (int) (Gdx.graphics.getHeight() * 0.5f);
-        return minY + new Random(System.currentTimeMillis()).nextInt(dispersionY);
+        int textureHeight = (int) (screenHeight * 0.6756f);
+        int epsilon = (int) (0.1f  * screenHeight);
+        int minY =  - textureHeight + epsilon ;
+        int dispersionY = textureHeight - epsilon;
+        int rand = new Random(System.currentTimeMillis()).nextInt(dispersionY);
+
+
+        return minY + rand;
     }
 
     public Rectangle getRectangleBounds() {
