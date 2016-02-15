@@ -33,8 +33,8 @@ public class JumpingCat extends ApplicationAdapter {
     private float currentJumpDecrease;//снижение способности прыгать на эту величину
 
     public static final float GAME_SPEED_X = 0.7f; //скорость движения игры в процентах от SCREEN_WEIDHT
-    public int currentGameSpeedX;
-    private int speedDecrease; //снижение скорости когда сталкиваешься с ядом.
+    public float currentGameSpeedX;
+    private float speedDecrease; //снижение скорости когда сталкиваешься с ядом.
 
 
     public static final float DISTANCE_BETWEEN_GROUND = 120f; //расстояние между площадками в процентах от SCREEN_WEIDHT
@@ -62,7 +62,7 @@ public class JumpingCat extends ApplicationAdapter {
     BitmapFont scoringFont;
     BitmapFont infoFont;
 
-    private final int numberOfRoofs = 2;
+    private final int numberOfRoofs = 3;
     private final int numberOfPoison = 4;
 
     Poison[] poison = new Poison[numberOfPoison];
@@ -102,7 +102,7 @@ public class JumpingCat extends ApplicationAdapter {
         distanceBetweenHealth = DISTANCE_BETWEEN_HEALTH * SCREEN_WEIDHT / 100;
         scoringScale = SCORING_TEXT_SIZE * SCREEN_WEIDHT / 100;
         infoScale = INFO_TEXT_SIZE * SCREEN_WEIDHT / 100;
-        speedDecrease = 1;
+        speedDecrease = (0.09f * SCREEN_WEIDHT / 100);
 
         gameIsRunning = false;
         gameOver = false;
@@ -161,7 +161,7 @@ public class JumpingCat extends ApplicationAdapter {
         }
         gameOverTexture = textureAtlas.findRegion("gameover");
 
-        //myRequestHandler.showAdMob(true);
+        myRequestHandler.showAdMob(false);
 
 
 
@@ -384,8 +384,8 @@ public class JumpingCat extends ApplicationAdapter {
                 0.25f * SCREEN_WEIDHT, 0.094f * SCREEN_HEIGHT);
 
         if (gameOver) {
-            batch.draw(gameOverTexture, SCREEN_WEIDHT / 2 - gameOverTexture.getRegionWidth() / 2,
-                    SCREEN_HEIGHT / 2 - gameOverTexture.getRegionHeight() / 2);
+            batch.draw(gameOverTexture, SCREEN_WEIDHT / 2 - (0.42f * SCREEN_WEIDHT / 2),
+                    SCREEN_HEIGHT / 2 - (0.2f * SCREEN_HEIGHT / 2), 0.42f * SCREEN_WEIDHT, 0.2f * SCREEN_HEIGHT);
             infoFont.draw(batch, SCORE_TEXT + " " + String.valueOf(progressCounter), 35f * SCREEN_WEIDHT / 100, 30f * SCREEN_HEIGHT / 100);
         }
         else {
