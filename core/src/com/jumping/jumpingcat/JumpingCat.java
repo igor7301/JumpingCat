@@ -161,7 +161,7 @@ public class JumpingCat extends ApplicationAdapter {
         }
         gameOverTexture = textureAtlas.findRegion("gameover");
 
-        myRequestHandler.showAdMob(true);
+        //myRequestHandler.showAdMob(true);
 
 
 
@@ -173,7 +173,6 @@ public class JumpingCat extends ApplicationAdapter {
     @Override
     public void create() {
         init();
-        myRequestHandler.showAdMob(true);
     }
 
 

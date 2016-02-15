@@ -50,7 +50,7 @@ public class Ground  {
         //переводим проценты в пиксели
         //// TODO: 15.02.16  Update needed
         int textureHeight = (int) (screenHeight * 0.6756f);
-        int epsilon = (int) (0.1f  * screenHeight);
+        int epsilon = (int) (0.15f  * screenHeight);
         int minY =  - textureHeight + epsilon ;
         int dispersionY = textureHeight - epsilon;
         int rand = new Random(System.currentTimeMillis()).nextInt(dispersionY);
