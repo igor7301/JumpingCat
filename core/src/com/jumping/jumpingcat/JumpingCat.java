@@ -88,9 +88,9 @@ public class JumpingCat extends ApplicationAdapter {
         TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("atlas.pack"));
 
         SCREEN_HEIGHT = Gdx.graphics.getHeight();
-//        SCREEN_HEIGHT = 1270;
+//        SCREEN_HEIGHT = 1280;
         SCREEN_WEIDHT = Gdx.graphics.getWidth();
-//        SCREEN_WEIDHT = 820;
+//        SCREEN_WEIDHT = 720;
         SCREEN_DIMENSION = SCREEN_WEIDHT * SCREEN_HEIGHT;
 
         currentJumpDecrease = JUMP_DECREASE * SCREEN_HEIGHT / 100; //снижение способности прыгать в пикселях
@@ -155,7 +155,7 @@ public class JumpingCat extends ApplicationAdapter {
             ground[i].setX(i * distanceBetweenGround);
             ground[i].setY(Ground.getRandomY(SCREEN_HEIGHT));
             if (i == 0) {
-                ground[i].setY((int) (heroY - ground[i].getHeight()));
+                ground[i].setY((int) (heroY - 0.62f * SCREEN_HEIGHT));
             }
 
         }
