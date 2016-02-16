@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -14,6 +15,16 @@ import com.badlogic.gdx.math.Intersector;
 
 public class JumpingCat extends ApplicationAdapter {
 
+    public static final int LEVEL1_PROGRESS_NUMBER = 0;
+    public static final int LEVEL2_PROGRESS_NUMBER = 5;
+    public static final int LEVEL3_PROGRESS_NUMBER = 10;
+    public static final int LEVEL4_PROGRESS_NUMBER = 15;
+    public static final int LEVEL5_PROGRESS_NUMBER = 40;
+    public static final int LEVEL6_PROGRESS_NUMBER = 50;
+    public static final int LEVEL7_PROGRESS_NUMBER = 60;
+    public static final int LEVEL8_PROGRESS_NUMBER = 70;
+    public static final int LEVEL9_PROGRESS_NUMBER = 80;
+    public static final int LEVEL10_PROGRESS_NUMBER = 90;
 
     public static final String JUMP_TEXT = "Jump";
     public static final String SPEED_TEXT = "Speed";
@@ -50,7 +61,7 @@ public class JumpingCat extends ApplicationAdapter {
     public static final int DELAY_BETWEEN_HERO_ACTIONS = 5;
     public static final int NUMBER_OF_HERO_STATES = 4;
     SpriteBatch batch;
-    TextureRegion background;
+    Texture background;
     TextureRegion gameOverTexture;
     Health health;
     TextureRegion[] hero = new TextureRegion[NUMBER_OF_HERO_STATES];
@@ -123,7 +134,7 @@ public class JumpingCat extends ApplicationAdapter {
 
 
         batch = new SpriteBatch();
-        background = textureAtlas.findRegion("bg");
+        background = new Texture("bg.png");
 
 
         for (int i = 0; i < numberOfPoison; i++) {
@@ -344,13 +355,51 @@ public class JumpingCat extends ApplicationAdapter {
                 heroY + 0.094f * SCREEN_HEIGHT / 2, 0.094f * SCREEN_HEIGHT / 2);
 
 
-
-
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
 
         batch.begin();
         batch.disableBlending();
+
+
+
+
+        try {
+            switch (progressCounter){
+
+                case LEVEL2_PROGRESS_NUMBER:
+                    background = TextureSingleton.getInstance("bg2.png");
+                    break;
+                case LEVEL3_PROGRESS_NUMBER:
+                    background = TextureSingleton.getInstance("bg3.png");
+                    break;
+                case LEVEL4_PROGRESS_NUMBER:
+                    background = TextureSingleton.getInstance("bg4.png");
+                    break;
+                case LEVEL5_PROGRESS_NUMBER:
+                    background = TextureSingleton.getInstance("bg5.png");
+                    break;
+                case LEVEL6_PROGRESS_NUMBER:
+                    background = TextureSingleton.getInstance("bg6.png");
+                    break;
+                case LEVEL7_PROGRESS_NUMBER:
+                    background = TextureSingleton.getInstance("bg7.png");
+                    break;
+                case LEVEL8_PROGRESS_NUMBER:
+                    background = TextureSingleton.getInstance("bg8.png");
+                    break;
+                case LEVEL9_PROGRESS_NUMBER:
+                    background = TextureSingleton.getInstance("bg9.png");
+                    break;
+                case LEVEL10_PROGRESS_NUMBER:
+                    background = TextureSingleton.getInstance("bg10.png");
+                    break;
+            }
+        }
+        catch (Exception e) {
+            background = TextureSingleton.getInstance("bg.png");;
+        }
+
+
         batch.draw(background, 0, 0, SCREEN_WEIDHT, SCREEN_HEIGHT);
 
         batch.enableBlending();
@@ -412,6 +461,8 @@ public class JumpingCat extends ApplicationAdapter {
 //        shapeRenderer.end();
 
     }
+
+
 
 
 }
