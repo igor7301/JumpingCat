@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
@@ -29,6 +30,10 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
 
     protected AdView banner;
 
+    private boolean clickOnAd;
+    private int numberOfclickOnAd;
+    private boolean adClosed;
+    private JumpingCat jumpingCat;
 
 
     @Override
@@ -45,7 +50,8 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 
         //представление для LibGDX
-        gameView = initializeForView(new JumpingCat(this), config);
+        jumpingCat = new JumpingCat(this);
+        gameView = initializeForView(jumpingCat, config);
 
         //представление и настройка AdMob
 //        AdView adView = new AdView(this, AdSize.BANNER, "ваш_ID_в_AdMob");
@@ -61,7 +67,45 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
 
         mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId("ca-app-pub-7135211728909018/5511547887");
+
         adRequestInterstisial = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).addTestDevice("emulator-5554").build();
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                super.onAdClosed();
+                adClosed = true;
+            }
+
+            @Override
+            public void onAdOpened() {
+                super.onAdOpened();
+                adClosed  = false;
+
+            }
+
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                adClosed = false;
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                super.onAdLeftApplication();
+                clickOnAd = true;
+                adClosed = false;
+
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                super.onAdFailedToLoad(errorCode);
+                jumpingCat.init();
+            }
+        });
+
+
+
 
         RelativeLayout.LayoutParams adParams =
                 new RelativeLayout.LayoutParams( RelativeLayout.LayoutParams.WRAP_CONTENT,
@@ -118,6 +162,21 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
     @Override
     public void showAdMobInterstitial(){
         handlerInterstitial.sendEmptyMessage(1);
+    }
+
+    @Override
+    public boolean userClosedAd() {
+        return adClosed;
+    }
+
+    @Override
+    public boolean doesUserClickOnAd() {
+        return clickOnAd;
+    }
+
+    @Override
+    public void setUserClickOnAd(boolean clickOnAd) {
+        this.clickOnAd = clickOnAd;
     }
 
     @Override

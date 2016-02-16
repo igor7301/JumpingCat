@@ -88,6 +88,7 @@ public class JumpingCat extends ApplicationAdapter {
 
 
     private IActivityRequestHandler myRequestHandler;
+    private int numberClickOnAd;
 
     // Добавляем конструктор
     public JumpingCat(IActivityRequestHandler handler) {
@@ -114,6 +115,7 @@ public class JumpingCat extends ApplicationAdapter {
         scoringScale = SCORING_TEXT_SIZE * SCREEN_WEIDHT / 100;
         infoScale = INFO_TEXT_SIZE * SCREEN_WEIDHT / 100;
         speedDecrease = (0.09f * SCREEN_WEIDHT / 100);
+        numberClickOnAd = 0;
 
         gameIsRunning = false;
         gameOver = false;
@@ -179,6 +181,45 @@ public class JumpingCat extends ApplicationAdapter {
 
 
 
+    }
+
+
+    public void initContinueFromLastPoint() {
+        float offsetX = Math.abs(heroX - ground[0].getX());
+        for (int i = 0; i < numberOfRoofs; i++) {
+         if ( Math.abs(heroX - ground[i].getX()) <= offsetX) {
+             offsetX = Math.abs(heroX - ground[i].getX());
+         }
+        }
+
+        heroY = SCREEN_HEIGHT;
+
+        for (int i = 0; i < numberOfRoofs; i++) {
+            ground[i].decreaseX(offsetX);
+        }
+
+        for (int i = 0; i < numberOfPoison; i++) {
+            poison[i].decreaseX(offsetX);
+        }
+        health.decreaseX(offsetX);
+    }
+
+    @Override
+    public void resume() {
+        super.resume();
+
+                    //продолжаем игру
+                    if(myRequestHandler.doesUserClickOnAd() && numberClickOnAd < 1) {
+
+                        gameOver = false;
+                        //gameIsRunning = true;
+                        numberClickOnAd++;
+                        initContinueFromLastPoint();
+                    }
+                    else {
+                        myRequestHandler.setUserClickOnAd(false);
+                        init();
+                    }
     }
 
     @Override
@@ -345,7 +386,18 @@ public class JumpingCat extends ApplicationAdapter {
                     //если игра закончена начинаем игру заново
                     myRequestHandler.showAdMobInterstitial();
 
-                    init();
+//                    //продолжаем игру
+//                    if(myRequestHandler.doesUserClickOnAd() && numberClickOnAd < 1) {
+//
+//                        gameOver = false;
+//                        //gameIsRunning = true;
+//                        numberClickOnAd++;
+//                        initContinueFromLastPoint();
+//                    }
+//                    else {
+//                        myRequestHandler.setUserClickOnAd(false);
+//                        init();
+//                    }
                 }
 
             }
