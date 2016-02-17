@@ -32,12 +32,10 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
     private AdRequest adRequestInterstisial;
     private boolean failedToLoadInterstitialAd;
 
-    protected AdView banner;
 
     private boolean clickOnAd;
-    private int numberOfclickOnAd;
     private boolean adClosed;
-    private JumpingCat jumpingCat;
+    private MainGame mainGame;
 
 
 
@@ -56,8 +54,8 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 
         //представление для LibGDX
-        jumpingCat = new JumpingCat(this);
-        gameView = initializeForView(jumpingCat, config);
+        mainGame = new MainGame(this);
+        gameView = initializeForView(mainGame, config);
 
         //представление и настройка AdMob
 //        AdView adView = new AdView(this, AdSize.BANNER, "ваш_ID_в_AdMob");
@@ -127,7 +125,7 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
                 }
 
                 failedToLoadInterstitialAd = true;
-               jumpingCat.resume();
+               mainGame.resume();
 
 
             }

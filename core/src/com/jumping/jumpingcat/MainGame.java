@@ -14,7 +14,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 
-public class JumpingCat extends Game {
+public class MainGame extends Game {
 
     public static final int LEVEL1_PROGRESS_NUMBER = 0;
     public static final int LEVEL2_PROGRESS_NUMBER = 5;
@@ -26,6 +26,9 @@ public class JumpingCat extends Game {
     public static final int LEVEL8_PROGRESS_NUMBER = 70;
     public static final int LEVEL9_PROGRESS_NUMBER = 80;
     public static final int LEVEL10_PROGRESS_NUMBER = 90;
+    public static final int MAX_PROGRESS_NUMBER = 100;
+
+
     public static final int amountOfCountinueWithAdvertising = 1;
 
     TextureAtlas textureAtlas;
@@ -46,7 +49,7 @@ public class JumpingCat extends Game {
     private float currentJumpSize; // текущее значение прыжка
     private float currentJumpDecrease;//снижение способности прыгать на эту величину
 
-    public static final float GAME_SPEED_X = 0.7f; //скорость движения игры в процентах от SCREEN_WEIDHT
+    public static final float GAME_SPEED_X = 0.748f; //скорость движения игры в процентах от SCREEN_WEIDHT
     public float currentGameSpeedX;
     private float speedDecrease; //снижение скорости когда сталкиваешься с ядом.
 
@@ -64,7 +67,7 @@ public class JumpingCat extends Game {
     public static final int DELAY_BETWEEN_HERO_ACTIONS = 5;
     public static final int NUMBER_OF_HERO_STATES = 4;
     SpriteBatch batch;
-    Texture background;
+    TextureRegion background;
     TextureRegion gameOverTexture;
     Health health;
     TextureRegion[] hero = new TextureRegion[NUMBER_OF_HERO_STATES];
@@ -92,10 +95,10 @@ public class JumpingCat extends Game {
 
     private IActivityRequestHandler myRequestHandler;
     private int numberClickOnAd;
-    private boolean adMob;
+    private boolean gameWin;
 
     // Добавляем конструктор
-    public JumpingCat(IActivityRequestHandler handler) {
+    public MainGame(IActivityRequestHandler handler) {
         myRequestHandler = handler;
     }
 
@@ -106,7 +109,6 @@ public class JumpingCat extends Game {
 //        SCREEN_WEIDHT = 720;
         SCREEN_DIMENSION = SCREEN_WEIDHT * SCREEN_HEIGHT;
 
-        adMob = true;
         currentJumpDecrease = JUMP_DECREASE * SCREEN_HEIGHT / 100; //снижение способности прыгать в пикселях
         currentJumpSize = FULL_JUMP_SIZE * SCREEN_HEIGHT / 100;//размер прыжка в пикселях
 
@@ -123,6 +125,7 @@ public class JumpingCat extends Game {
         gameOver = false;
         descentVelocity = 0;
         progressCounter = 0;
+        gameWin = false;
 
         scoringFont.setColor(Color.WHITE);
         infoFont.setColor(Color.WHITE);
@@ -157,6 +160,8 @@ public class JumpingCat extends Game {
 
 
     public void initContinueFromLastPoint() {
+        SCREEN_HEIGHT = Gdx.graphics.getHeight();
+        SCREEN_WEIDHT = Gdx.graphics.getWidth();
 
         float offsetX = Math.abs(heroX - ground[0].getX());
         for (int i = 0; i < numberOfRoofs; i++) {
@@ -202,7 +207,7 @@ public class JumpingCat extends Game {
         heroCircle = new Circle();
         scoringFont = new BitmapFont();
         infoFont = new BitmapFont();
-        background = new Texture("bg.png");
+        background = textureAtlas.findRegion("bg");
         for (int i = 0; i < numberOfPoison; i++) {
             poison[i] = new Poison(textureAtlas.findRegion("food"));
         }
@@ -324,10 +329,10 @@ public class JumpingCat extends Game {
                 }
 
             }
-            Gdx.app.log("Progress", "" + progressCounter);
-            Gdx.app.log("JumpSize", "" + currentJumpSize);
-            Gdx.app.log("Speed", "" + currentGameSpeedX);
-
+//            Gdx.app.log("Progress", "" + progressCounter);
+//            Gdx.app.log("JumpSize", "" + currentJumpSize);
+//            Gdx.app.log("Speed", "" + currentGameSpeedX);
+//
 
             //если eда ушла за экран то вместо нее рисуем новую после последней еды
             for (int i = 0; i < numberOfPoison; i++) {
@@ -399,41 +404,47 @@ public class JumpingCat extends Game {
         batch.disableBlending();
 
 
-        try {
-            switch (progressCounter) {
-
-                case LEVEL2_PROGRESS_NUMBER:
-                    background = TextureSingleton.getInstance("bg2.png");
-                    break;
-                case LEVEL3_PROGRESS_NUMBER:
-                    background = TextureSingleton.getInstance("bg3.png");
-                    break;
-                case LEVEL4_PROGRESS_NUMBER:
-                    background = TextureSingleton.getInstance("bg4.png");
-                    break;
-                case LEVEL5_PROGRESS_NUMBER:
-                    background = TextureSingleton.getInstance("bg5.png");
-                    break;
-                case LEVEL6_PROGRESS_NUMBER:
-                    background = TextureSingleton.getInstance("bg6.png");
-                    break;
-                case LEVEL7_PROGRESS_NUMBER:
-                    background = TextureSingleton.getInstance("bg7.png");
-                    break;
-                case LEVEL8_PROGRESS_NUMBER:
-                    background = TextureSingleton.getInstance("bg8.png");
-                    break;
-                case LEVEL9_PROGRESS_NUMBER:
-                    background = TextureSingleton.getInstance("bg9.png");
-                    break;
-                case LEVEL10_PROGRESS_NUMBER:
-                    background = TextureSingleton.getInstance("bg10.png");
-                    break;
-            }
-        } catch (Exception e) {
-            background = TextureSingleton.getInstance("bg.png");
-            ;
+        if (progressCounter == MAX_PROGRESS_NUMBER) {
+            gameIsRunning = false;
+            gameOver = true;
+            gameWin = true;
         }
+
+//        try {
+//            switch (progressCounter) {
+//
+//                case LEVEL2_PROGRESS_NUMBER:
+//                    background = TextureSingleton.getInstance("bg2.png");
+//                    break;
+//                case LEVEL3_PROGRESS_NUMBER:
+//                    background = TextureSingleton.getInstance("bg3.png");
+//                    break;
+//                case LEVEL4_PROGRESS_NUMBER:
+//                    background = TextureSingleton.getInstance("bg4.png");
+//                    break;
+//                case LEVEL5_PROGRESS_NUMBER:
+//                    background = TextureSingleton.getInstance("bg5.png");
+//                    break;
+//                case LEVEL6_PROGRESS_NUMBER:
+//                    background = TextureSingleton.getInstance("bg6.png");
+//                    break;
+//                case LEVEL7_PROGRESS_NUMBER:
+//                    background = TextureSingleton.getInstance("bg7.png");
+//                    break;
+//                case LEVEL8_PROGRESS_NUMBER:
+//                    background = TextureSingleton.getInstance("bg8.png");
+//                    break;
+//                case LEVEL9_PROGRESS_NUMBER:
+//                    background = TextureSingleton.getInstance("bg9.png");
+//                    break;
+//                case LEVEL10_PROGRESS_NUMBER:
+//                    background = TextureSingleton.getInstance("bg10.png");
+//                    break;
+//            }
+//        } catch (Exception e) {
+//            background = TextureSingleton.getInstance("bg.png");
+//            ;
+//        }
 
 
         batch.draw(background, 0, 0, SCREEN_WEIDHT, SCREEN_HEIGHT);
@@ -468,26 +479,43 @@ public class JumpingCat extends Game {
                 0.25f * SCREEN_WEIDHT, 0.094f * SCREEN_HEIGHT);
 
         if (gameOver) {
-            batch.draw(gameOverTexture, SCREEN_WEIDHT / 2 - (0.42f * SCREEN_WEIDHT / 2),
-                    SCREEN_HEIGHT / 2 - (0.2f * SCREEN_HEIGHT / 2), 0.42f * SCREEN_WEIDHT, 0.2f * SCREEN_HEIGHT);
-            infoFont.draw(batch, SCORE_TEXT + " " + String.valueOf(progressCounter), 35f * SCREEN_WEIDHT / 100, 30f * SCREEN_HEIGHT / 100);
+            if (!gameWin) {
+                batch.draw(gameOverTexture, SCREEN_WEIDHT / 2 - (0.42f * SCREEN_WEIDHT / 2),
+                        SCREEN_HEIGHT / 2 - (0.2f * SCREEN_HEIGHT / 2), 0.42f * SCREEN_WEIDHT, 0.2f * SCREEN_HEIGHT);
+                infoFont.draw(batch, SCORE_TEXT + " " + String.valueOf(progressCounter), 35f * SCREEN_WEIDHT / 100, 30f * SCREEN_HEIGHT / 100);
 
 
-            if (numberClickOnAd < amountOfCountinueWithAdvertising && !myRequestHandler.getFailedToLoadInterstitialAd()) {
-                infoFont.draw(batch, "To continue", 32f * SCREEN_WEIDHT / 100, 20f * SCREEN_HEIGHT / 100);
-                infoFont.draw(batch, "click on advertising", 22f * SCREEN_WEIDHT / 100, 15f * SCREEN_HEIGHT / 100);
+                if (numberClickOnAd < amountOfCountinueWithAdvertising && !myRequestHandler.getFailedToLoadInterstitialAd()) {
+                    infoFont.draw(batch, "To continue from HERE", 15f * SCREEN_WEIDHT / 100, 20f * SCREEN_HEIGHT / 100);
+                    infoFont.draw(batch, "click on advertising", 22f * SCREEN_WEIDHT / 100, 15f * SCREEN_HEIGHT / 100);
+
+                }
+            } else {
+                //игра выйграна
+                scoringFont.draw(batch, "YOU WIN!", 0.22f * SCREEN_WEIDHT, 0.6f * SCREEN_HEIGHT);
+
 
             }
 
         } else {
 
+
             //отступы указаны в процентах
             scoringFont.draw(batch, String.valueOf(progressCounter), (9.2f * SCREEN_WEIDHT) / 100, 10.4f * SCREEN_HEIGHT / 100);
-            infoFont.draw(batch, JUMP_TEXT + " " + String.valueOf((int) (currentJumpSize * 100 / (SCREEN_HEIGHT * FULL_JUMP_SIZE / 100))), SCREEN_WEIDHT - (32.4f * SCREEN_WEIDHT / 100), SCREEN_HEIGHT - (2.6f * SCREEN_HEIGHT / 100));
-            infoFont.draw(batch, SPEED_TEXT + " " + String.valueOf((int) (currentGameSpeedX * 100 / (SCREEN_WEIDHT * GAME_SPEED_X / 100))), 4.6f * SCREEN_WEIDHT / 100, SCREEN_HEIGHT - (2.6f * SCREEN_HEIGHT / 100));
+
+            try {
+
+                infoFont.draw(batch, JUMP_TEXT + " " + String.valueOf((int) ((currentJumpSize * 100) / (int) (0.01 * FULL_JUMP_SIZE * SCREEN_HEIGHT))), SCREEN_WEIDHT - (32.4f * SCREEN_WEIDHT / 100), SCREEN_HEIGHT - (2.6f * SCREEN_HEIGHT / 100));
+                infoFont.draw(batch, SPEED_TEXT + " " + String.valueOf((int) ((currentGameSpeedX * 100) / (int) (0.01 * GAME_SPEED_X * SCREEN_WEIDHT))), 4.6f * SCREEN_WEIDHT / 100, SCREEN_HEIGHT - (2.6f * SCREEN_HEIGHT / 100));
+            }
+            catch (Exception e) {
+                infoFont.draw(batch, JUMP_TEXT + " ", SCREEN_WEIDHT - (32.4f * SCREEN_WEIDHT / 100), SCREEN_HEIGHT - (2.6f * SCREEN_HEIGHT / 100));
+                infoFont.draw(batch, SPEED_TEXT + " ", 4.6f * SCREEN_WEIDHT / 100, SCREEN_HEIGHT - (2.6f * SCREEN_HEIGHT / 100));
+            }
         }
 
         batch.end();
+
 
 //        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 //        shapeRenderer.setColor(Color.RED);
