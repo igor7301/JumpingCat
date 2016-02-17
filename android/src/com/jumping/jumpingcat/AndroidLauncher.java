@@ -120,6 +120,8 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
                         Gdx.app.log("ADS_ERROR", "ERROR_CODE_NO_FILL");
                         break;
                 }
+               jumpingCat.resume();
+
 
             }
         });

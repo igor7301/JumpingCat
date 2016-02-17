@@ -1,6 +1,7 @@
 package com.jumping.jumpingcat;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -13,7 +14,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 
-public class JumpingCat extends ApplicationAdapter {
+public class JumpingCat extends Game {
 
     public static final int LEVEL1_PROGRESS_NUMBER = 0;
     public static final int LEVEL2_PROGRESS_NUMBER = 5;
@@ -25,6 +26,7 @@ public class JumpingCat extends ApplicationAdapter {
     public static final int LEVEL8_PROGRESS_NUMBER = 70;
     public static final int LEVEL9_PROGRESS_NUMBER = 80;
     public static final int LEVEL10_PROGRESS_NUMBER = 90;
+    public static final int amountOfCountinueWithAdvertising = 1;
 
     TextureAtlas textureAtlas;
     public static final String JUMP_TEXT = "Jump";
@@ -180,7 +182,7 @@ public class JumpingCat extends ApplicationAdapter {
         //super.resume();
 
         //продолжаем игру
-        if (myRequestHandler.doesUserClickOnAd() && numberClickOnAd < 1) {
+        if (myRequestHandler.doesUserClickOnAd() && numberClickOnAd < amountOfCountinueWithAdvertising) {
 
             gameOver = false;
             //gameIsRunning = true;
@@ -373,17 +375,13 @@ public class JumpingCat extends ApplicationAdapter {
                 if (!gameOver) {
                     gameIsRunning = true;
 
-                }
-                else {
+                } else {
                     //игра закончена показываем рекламу
 
                     myRequestHandler.showAdMobInterstitial();
 
-                    //возомновлем игру лмбо сначала либо стобого мета где закончили
+                    //возомновлем игру лмбо сначала либо стобого мета где закончили  методе resume()
                     //если юзер нажал на рекламу (но не более одного раза за активную игру)
-                    resume();
-
-
                 }
 
             }
@@ -475,8 +473,11 @@ public class JumpingCat extends ApplicationAdapter {
             infoFont.draw(batch, SCORE_TEXT + " " + String.valueOf(progressCounter), 35f * SCREEN_WEIDHT / 100, 30f * SCREEN_HEIGHT / 100);
 
 
-            infoFont.draw(batch, "To continue", 32f * SCREEN_WEIDHT / 100, 20f * SCREEN_HEIGHT / 100);
-            infoFont.draw(batch, "click on advertising", 22f * SCREEN_WEIDHT / 100, 15f * SCREEN_HEIGHT / 100);
+            if (numberClickOnAd < amountOfCountinueWithAdvertising) {
+                infoFont.draw(batch, "To continue", 32f * SCREEN_WEIDHT / 100, 20f * SCREEN_HEIGHT / 100);
+                infoFont.draw(batch, "click on advertising", 22f * SCREEN_WEIDHT / 100, 15f * SCREEN_HEIGHT / 100);
+
+            }
 
         } else {
 
