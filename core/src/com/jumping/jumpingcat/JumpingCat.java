@@ -473,7 +473,7 @@ public class JumpingCat extends Game {
             infoFont.draw(batch, SCORE_TEXT + " " + String.valueOf(progressCounter), 35f * SCREEN_WEIDHT / 100, 30f * SCREEN_HEIGHT / 100);
 
 
-            if (numberClickOnAd < amountOfCountinueWithAdvertising) {
+            if (numberClickOnAd < amountOfCountinueWithAdvertising && !myRequestHandler.getFailedToLoadInterstitialAd()) {
                 infoFont.draw(batch, "To continue", 32f * SCREEN_WEIDHT / 100, 20f * SCREEN_HEIGHT / 100);
                 infoFont.draw(batch, "click on advertising", 22f * SCREEN_WEIDHT / 100, 15f * SCREEN_HEIGHT / 100);
 

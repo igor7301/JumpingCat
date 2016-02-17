@@ -16,4 +16,6 @@ public interface IActivityRequestHandler {
 
     void loadAdMod();
 
+    boolean getFailedToLoadInterstitialAd();
+
 }

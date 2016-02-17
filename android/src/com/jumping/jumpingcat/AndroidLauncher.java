@@ -30,6 +30,7 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
     protected InterstitialAd mInterstitialAd;
     protected boolean interstitialAdLoaded;
     private AdRequest adRequestInterstisial;
+    private boolean failedToLoadInterstitialAd;
 
     protected AdView banner;
 
@@ -37,6 +38,8 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
     private int numberOfclickOnAd;
     private boolean adClosed;
     private JumpingCat jumpingCat;
+
+
 
 
     @Override
@@ -90,7 +93,9 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
+                failedToLoadInterstitialAd = false;
                 adClosed = false;
+                showAdMobInterstitial();
 
             }
 
@@ -120,11 +125,14 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
                         Gdx.app.log("ADS_ERROR", "ERROR_CODE_NO_FILL");
                         break;
                 }
+
+                failedToLoadInterstitialAd = true;
                jumpingCat.resume();
 
 
             }
         });
+
 
 
 
@@ -139,6 +147,10 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
 
         //всё соединяем в одной слое
         setContentView(layout);
+    }
+
+    public boolean getFailedToLoadInterstitialAd() {
+        return failedToLoadInterstitialAd;
     }
 
     protected Handler handler = new Handler() {
