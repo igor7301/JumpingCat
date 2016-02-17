@@ -474,10 +474,10 @@ public class JumpingCat extends ApplicationAdapter {
                     SCREEN_HEIGHT / 2 - (0.2f * SCREEN_HEIGHT / 2), 0.42f * SCREEN_WEIDHT, 0.2f * SCREEN_HEIGHT);
             infoFont.draw(batch, SCORE_TEXT + " " + String.valueOf(progressCounter), 35f * SCREEN_WEIDHT / 100, 30f * SCREEN_HEIGHT / 100);
 
-            if (myRequestHandler.doesUserClickOnAd() && numberClickOnAd < 1) {
-                infoFont.draw(batch, "To continue", 15f * SCREEN_WEIDHT / 100, 10f * SCREEN_HEIGHT / 100);
-                infoFont.draw(batch, "click on advertising", 15f * SCREEN_WEIDHT / 100, 5f * SCREEN_HEIGHT / 100);
-            }
+
+            infoFont.draw(batch, "To continue", 32f * SCREEN_WEIDHT / 100, 20f * SCREEN_HEIGHT / 100);
+            infoFont.draw(batch, "click on advertising", 22f * SCREEN_WEIDHT / 100, 15f * SCREEN_HEIGHT / 100);
+
         } else {
 
             //отступы указаны в процентах
