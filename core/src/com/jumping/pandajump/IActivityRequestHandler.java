@@ -1,4 +1,4 @@
-package com.jumping.jumpingcat;
+package com.jumping.pandajump;
 
 /**
  * Created by ikomarov on 11.02.2016.

@@ -1,4 +1,4 @@
-package com.jumping.jumpingcat;
+package com.jumping.pandajump;
 
 import com.badlogic.gdx.graphics.Texture;
 

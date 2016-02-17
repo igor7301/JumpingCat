@@ -1,28 +1,41 @@
-package com.jumping.jumpingcat;
+package com.jumping.pandajump;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
+
+import java.util.Random;
 
 /**
  * Created by ikomarov on 08.02.2016.
  */
-public class Health  {
+public class Poison {
+
     private final TextureRegion textureRegion;
     private float x;
     private float y;
     boolean collisionWithCharacter;
     Circle circle = new Circle();
 
-    public Health(TextureRegion textureRegion) {
+
+    public Poison(TextureRegion textureRegion) {
         this.textureRegion = textureRegion;
+    }
+
+    public static int getRandomY(int screenHeight) {
+        int minY = screenHeight / 2;
+        int dispersionY = screenHeight / 4;
+        return minY + new Random(System.currentTimeMillis()).nextInt(dispersionY);
     }
 
     public float getX() {
         return x;
     }
 
-    public Health setX(float x) {
+    public float getY() {
+        return y;
+    }
+
+    public Poison setX(float x) {
         this.x = x;
         return this;
     }
@@ -31,21 +44,16 @@ public class Health  {
         this.x -= x;
     }
 
-    public float getY() {
-        return y;
-    }
-
-    public Health setY(float y) {
+    public Poison setY(int y) {
         this.y = y;
         return this;
     }
-
 
     public boolean getCollisionWithCharacter() {
         return collisionWithCharacter;
     }
 
-    public Health setCollisionWithCharacter(boolean collisionWithCharacter) {
+    public Poison setCollisionWithCharacter(boolean collisionWithCharacter) {
         this.collisionWithCharacter = collisionWithCharacter;
         return this;
     }
@@ -63,7 +71,7 @@ public class Health  {
         return textureRegion;
     }
 
-    public float getWidth() {
-        return textureRegion.getRegionWidth();
+    public float getHeight() {
+        return textureRegion.getRegionHeight();
     }
 }

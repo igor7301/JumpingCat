@@ -1,4 +1,4 @@
-package com.jumping.jumpingcat;
+package com.jumping.pandajump;
 
 import android.os.Bundle;
 import android.os.Handler;
