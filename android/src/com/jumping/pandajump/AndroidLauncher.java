@@ -61,7 +61,7 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
 //        AdView adView = new AdView(this, AdSize.BANNER, "ваш_ID_в_AdMob");
         adView = new AdView(this);
         //ca-app-pub-идентификатор_баннера
-        adView.setAdUnitId("ca-app-pub-7135211728909018/4468793488");
+        adView.setAdUnitId("ca-app-pub-testbanner");
         adView.setAdSize(AdSize.BANNER);
         //идентификатор_тестового_устройства
         AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).addTestDevice("emulator-5554").build();
@@ -70,7 +70,7 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
         layout.addView(gameView);
 
         mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId("ca-app-pub-7135211728909018/5511547887");
+        mInterstitialAd.setAdUnitId("ca-app-pub-testbanner");
 
         adRequestInterstisial = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).addTestDevice("emulator-5554").build();
         mInterstitialAd.setAdListener(new AdListener() {
