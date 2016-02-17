@@ -8,6 +8,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.google.android.gms.ads.AdListener;
@@ -15,17 +16,19 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
-import com.jumping.jumpingcat.JumpingCat;
 
 
 public class AndroidLauncher extends AndroidApplication implements IActivityRequestHandler {
 
+    private static final int LOAD_ADS = 2;
+    private static final int ADS_STATE = 3;
     private final int SHOW_ADS = 1;
     private final int HIDE_ADS = 0;
 
     protected AdView adView;
     protected View gameView;
     protected InterstitialAd mInterstitialAd;
+    protected boolean interstitialAdLoaded;
     private AdRequest adRequestInterstisial;
 
     protected AdView banner;
@@ -74,6 +77,7 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
             public void onAdClosed() {
                 super.onAdClosed();
                 adClosed = true;
+
             }
 
             @Override
@@ -87,6 +91,7 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
             public void onAdLoaded() {
                 super.onAdLoaded();
                 adClosed = false;
+
             }
 
             @Override
@@ -97,6 +102,26 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
 
             }
 
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                super.onAdFailedToLoad(errorCode);
+
+                switch (errorCode) {
+                    case AdRequest.ERROR_CODE_INTERNAL_ERROR:
+                        Gdx.app.log("ADS_ERROR", "ERROR_CODE_INTERNAL_ERROR");
+                        break;
+                    case AdRequest.ERROR_CODE_INVALID_REQUEST:
+                        Gdx.app.log("ADS_ERROR", "ERROR_CODE_INVALID_REQUEST");
+                        break;
+                    case AdRequest.ERROR_CODE_NETWORK_ERROR:
+                        Gdx.app.log("ADS_ERROR", "ERROR_CODE_NETWORK_ERROR");
+                        break;
+                    case AdRequest.ERROR_CODE_NO_FILL:
+                        Gdx.app.log("ADS_ERROR", "ERROR_CODE_NO_FILL");
+                        break;
+                }
+
+            }
         });
 
 
@@ -140,6 +165,29 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
                     }
                     else {
                         mInterstitialAd.loadAd(adRequestInterstisial);
+                        //для проверки загрузки рекламы
+//                        if (mInterstitialAd.isLoading()) {
+//                            while (mInterstitialAd.isLoading()) {
+//
+//                            }
+//                        }
+                    }
+                    break;
+                case LOAD_ADS:
+                    if (!mInterstitialAd.isLoaded()) {
+
+                        mInterstitialAd.loadAd(adRequestInterstisial);
+                    }
+                    break;
+                case ADS_STATE:
+                    if (!mInterstitialAd.isLoaded()) {
+
+                        interstitialAdLoaded = true;
+
+                    }
+                    else {
+                        interstitialAdLoaded = false;
+
                     }
                     break;
 
@@ -157,11 +205,23 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
     @Override
     public void showAdMobInterstitial(){
         handlerInterstitial.sendEmptyMessage(1);
+        //mInterstitialAd.show();
     }
 
     @Override
     public boolean userClosedAd() {
         return adClosed;
+    }
+
+    @Override
+    public boolean adModIsLoaded() {
+        handlerInterstitial.sendEmptyMessage(3);
+        return interstitialAdLoaded;
+    }
+
+    @Override
+    public void loadAdMod() {
+        handlerInterstitial.sendEmptyMessage(2);
     }
 
     @Override
@@ -180,6 +240,7 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
         if (adView != null) {
             adView.resume();
         }
+
 
     }
 

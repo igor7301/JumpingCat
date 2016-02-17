@@ -11,4 +11,9 @@ public interface IActivityRequestHandler {
     void setUserClickOnAd(boolean clickOnAd);
 
     boolean userClosedAd();
+
+    boolean adModIsLoaded();
+
+    void loadAdMod();
+
 }

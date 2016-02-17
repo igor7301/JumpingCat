@@ -26,6 +26,7 @@ public class JumpingCat extends ApplicationAdapter {
     public static final int LEVEL9_PROGRESS_NUMBER = 80;
     public static final int LEVEL10_PROGRESS_NUMBER = 90;
 
+    TextureAtlas textureAtlas;
     public static final String JUMP_TEXT = "Jump";
     public static final String SPEED_TEXT = "Speed";
     private static final String SCORE_TEXT = "SCORE";
@@ -89,6 +90,7 @@ public class JumpingCat extends ApplicationAdapter {
 
     private IActivityRequestHandler myRequestHandler;
     private int numberClickOnAd;
+    private boolean adMob;
 
     // Добавляем конструктор
     public JumpingCat(IActivityRequestHandler handler) {
@@ -96,15 +98,13 @@ public class JumpingCat extends ApplicationAdapter {
     }
 
     public void init() {
-
-        TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("atlas.pack"));
-
         SCREEN_HEIGHT = Gdx.graphics.getHeight();
 //        SCREEN_HEIGHT = 1280;
         SCREEN_WEIDHT = Gdx.graphics.getWidth();
 //        SCREEN_WEIDHT = 720;
         SCREEN_DIMENSION = SCREEN_WEIDHT * SCREEN_HEIGHT;
 
+        adMob = true;
         currentJumpDecrease = JUMP_DECREASE * SCREEN_HEIGHT / 100; //снижение способности прыгать в пикселях
         currentJumpSize = FULL_JUMP_SIZE * SCREEN_HEIGHT / 100;//размер прыжка в пикселях
 
@@ -122,74 +122,45 @@ public class JumpingCat extends ApplicationAdapter {
         descentVelocity = 0;
         progressCounter = 0;
 
-
-        shapeRenderer = new ShapeRenderer();
-        heroCircle = new Circle();
-        scoringFont = new BitmapFont();
-        infoFont = new BitmapFont();
-
         scoringFont.setColor(Color.WHITE);
         infoFont.setColor(Color.WHITE);
 
         scoringFont.getData().setScale(scoringScale);
         infoFont.getData().setScale(infoScale);
 
-
-        batch = new SpriteBatch();
-        background = new Texture("bg.png");
-
-
         for (int i = 0; i < numberOfPoison; i++) {
-            poison[i] = new Poison(textureAtlas.findRegion("food"));
             poison[i].setX(i * distanceBetweenPoison).setY(Poison.getRandomY(SCREEN_HEIGHT));
         }
 
-        health = new Health(textureAtlas.findRegion("health"));
+
         health.setX(distanceBetweenHealth);
         health.setY(SCREEN_HEIGHT / 2);
-
-
-        hero[0] = textureAtlas.findRegion("panda1");
-        hero[1] = textureAtlas.findRegion("panda2");
-        hero[2] = textureAtlas.findRegion("panda3");
-        hero[3] = textureAtlas.findRegion("panda4");
 
         heroY = SCREEN_HEIGHT / 2 - hero[heroState].getRegionHeight() / 2;
         heroX = SCREEN_WEIDHT / 2 - hero[heroState].getRegionWidth() / 2;
 
-
         for (int i = 0; i < numberOfRoofs; i++) {
-
-
-
-
-            ground[i] = new Ground(textureAtlas.findRegion("ground"));
-
+            ground[i].setGroundCompleted(false);
             ground[i].setX(i * distanceBetweenGround);
             ground[i].setY(Ground.getRandomY(SCREEN_HEIGHT));
             if (i == 0) {
                 ground[i].setY((int) (heroY - 0.62f * SCREEN_HEIGHT));
             }
-
         }
-        gameOverTexture = textureAtlas.findRegion("gameover");
 
         myRequestHandler.showAdMob(false);
-
-
-
-
 
 
     }
 
 
     public void initContinueFromLastPoint() {
+
         float offsetX = Math.abs(heroX - ground[0].getX());
         for (int i = 0; i < numberOfRoofs; i++) {
-         if ( Math.abs(heroX - ground[i].getX()) <= offsetX) {
-             offsetX = Math.abs(heroX - ground[i].getX());
-         }
+            if (Math.abs(heroX - ground[i].getX()) <= offsetX) {
+                offsetX = Math.abs(heroX - ground[i].getX());
+            }
         }
 
         heroY = SCREEN_HEIGHT;
@@ -206,24 +177,44 @@ public class JumpingCat extends ApplicationAdapter {
 
     @Override
     public void resume() {
-        super.resume();
+        //super.resume();
 
-                    //продолжаем игру
-                    if(myRequestHandler.doesUserClickOnAd() && numberClickOnAd < 1) {
+        //продолжаем игру
+        if (myRequestHandler.doesUserClickOnAd() && numberClickOnAd < 1) {
 
-                        gameOver = false;
-                        //gameIsRunning = true;
-                        numberClickOnAd++;
-                        initContinueFromLastPoint();
-                    }
-                    else {
-                        myRequestHandler.setUserClickOnAd(false);
-                        init();
-                    }
+            gameOver = false;
+            //gameIsRunning = true;
+            numberClickOnAd++;
+            initContinueFromLastPoint();
+        } else {
+            myRequestHandler.setUserClickOnAd(false);
+            init();
+        }
     }
 
     @Override
     public void create() {
+        textureAtlas = new TextureAtlas(Gdx.files.internal("atlas.pack"));
+        batch = new SpriteBatch();
+        shapeRenderer = new ShapeRenderer();
+        heroCircle = new Circle();
+        scoringFont = new BitmapFont();
+        infoFont = new BitmapFont();
+        background = new Texture("bg.png");
+        for (int i = 0; i < numberOfPoison; i++) {
+            poison[i] = new Poison(textureAtlas.findRegion("food"));
+        }
+        health = new Health(textureAtlas.findRegion("health"));
+        hero[0] = textureAtlas.findRegion("panda1");
+        hero[1] = textureAtlas.findRegion("panda2");
+        hero[2] = textureAtlas.findRegion("panda3");
+        hero[3] = textureAtlas.findRegion("panda4");
+
+        for (int i = 0; i < numberOfRoofs; i++) {
+            ground[i] = new Ground(textureAtlas.findRegion("ground"));
+        }
+        gameOverTexture = textureAtlas.findRegion("gameover");
+
         init();
     }
 
@@ -382,25 +373,22 @@ public class JumpingCat extends ApplicationAdapter {
                 if (!gameOver) {
                     gameIsRunning = true;
 
-                } else {
-                    //если игра закончена начинаем игру заново
+                }
+                else {
+                    //игра закончена показываем рекламу
+
                     myRequestHandler.showAdMobInterstitial();
 
-//                    //продолжаем игру
-//                    if(myRequestHandler.doesUserClickOnAd() && numberClickOnAd < 1) {
-//
-//                        gameOver = false;
-//                        //gameIsRunning = true;
-//                        numberClickOnAd++;
-//                        initContinueFromLastPoint();
-//                    }
-//                    else {
-//                        myRequestHandler.setUserClickOnAd(false);
-//                        init();
-//                    }
+                    //возомновлем игру лмбо сначала либо стобого мета где закончили
+                    //если юзер нажал на рекламу (но не более одного раза за активную игру)
+                    resume();
+
+
                 }
 
             }
+
+
         }
 
         heroCircle.set(heroX + 0.25f * SCREEN_WEIDHT / 2,
@@ -413,10 +401,8 @@ public class JumpingCat extends ApplicationAdapter {
         batch.disableBlending();
 
 
-
-
         try {
-            switch (progressCounter){
+            switch (progressCounter) {
 
                 case LEVEL2_PROGRESS_NUMBER:
                     background = TextureSingleton.getInstance("bg2.png");
@@ -446,9 +432,9 @@ public class JumpingCat extends ApplicationAdapter {
                     background = TextureSingleton.getInstance("bg10.png");
                     break;
             }
-        }
-        catch (Exception e) {
-            background = TextureSingleton.getInstance("bg.png");;
+        } catch (Exception e) {
+            background = TextureSingleton.getInstance("bg.png");
+            ;
         }
 
 
@@ -459,7 +445,7 @@ public class JumpingCat extends ApplicationAdapter {
 
         for (int i = 0; i < numberOfRoofs; i++) {
             batch.draw(ground[i].getTextureRegion(), ground[i].getX(), ground[i].getY(), 0.83f * SCREEN_WEIDHT, 0.62f * SCREEN_HEIGHT);
-            ground[i].setRectangleBounds(ground[i].getX(), ground[i].getY(), 0.83f * SCREEN_WEIDHT,  0.62f * SCREEN_HEIGHT);
+            ground[i].setRectangleBounds(ground[i].getX(), ground[i].getY(), 0.83f * SCREEN_WEIDHT, 0.62f * SCREEN_HEIGHT);
         }
 
         for (int i = 0; i < numberOfPoison; i++) {
@@ -478,7 +464,6 @@ public class JumpingCat extends ApplicationAdapter {
         }
 
 
-
         batch.draw(hero[heroState],
                 heroX,
                 heroY,
@@ -488,8 +473,12 @@ public class JumpingCat extends ApplicationAdapter {
             batch.draw(gameOverTexture, SCREEN_WEIDHT / 2 - (0.42f * SCREEN_WEIDHT / 2),
                     SCREEN_HEIGHT / 2 - (0.2f * SCREEN_HEIGHT / 2), 0.42f * SCREEN_WEIDHT, 0.2f * SCREEN_HEIGHT);
             infoFont.draw(batch, SCORE_TEXT + " " + String.valueOf(progressCounter), 35f * SCREEN_WEIDHT / 100, 30f * SCREEN_HEIGHT / 100);
-        }
-        else {
+
+            if (myRequestHandler.doesUserClickOnAd() && numberClickOnAd < 1) {
+                infoFont.draw(batch, "To continue", 15f * SCREEN_WEIDHT / 100, 10f * SCREEN_HEIGHT / 100);
+                infoFont.draw(batch, "click on advertising", 15f * SCREEN_WEIDHT / 100, 5f * SCREEN_HEIGHT / 100);
+            }
+        } else {
 
             //отступы указаны в процентах
             scoringFont.draw(batch, String.valueOf(progressCounter), (9.2f * SCREEN_WEIDHT) / 100, 10.4f * SCREEN_HEIGHT / 100);
@@ -513,8 +502,6 @@ public class JumpingCat extends ApplicationAdapter {
 //        shapeRenderer.end();
 
     }
-
-
 
 
 }
