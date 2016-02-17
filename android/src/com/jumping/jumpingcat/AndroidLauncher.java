@@ -97,11 +97,6 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
 
             }
 
-            @Override
-            public void onAdFailedToLoad(int errorCode) {
-                super.onAdFailedToLoad(errorCode);
-                jumpingCat.init();
-            }
         });
 
 
