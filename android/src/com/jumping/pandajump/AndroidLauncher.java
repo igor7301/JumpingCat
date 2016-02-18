@@ -70,7 +70,7 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
         layout.addView(gameView);
 
         mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId("ca-app-pub-testbanner");
+        mInterstitialAd.setAdUnitId("ca-app-pub-7135211728909018/1055191884");
 
         adRequestInterstisial = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).addTestDevice("emulator-5554").build();
         mInterstitialAd.setAdListener(new AdListener() {
@@ -85,6 +85,7 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
             public void onAdOpened() {
                 super.onAdOpened();
                 adClosed  = false;
+
 
             }
 
