@@ -1,11 +1,8 @@
 package com.jumping.pandajump;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
+import com.startapp.android.publish.StartAppAd;
 
 
 /**
@@ -14,13 +11,16 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class MyMainGame extends Game{
 
     private IActivityRequestHandler iActivityRequestHandler;
+    private StartAppAd startAppAd;
     private SpriteBatch spriteBatch;
     private MainGameScreen mainGameScreen;
     private StartScreen startScreen;
 
 
-    public MyMainGame(IActivityRequestHandler iActivityRequestHandler) {
+    public MyMainGame(IActivityRequestHandler iActivityRequestHandler, StartAppAd startAppAd) {
         this.iActivityRequestHandler = iActivityRequestHandler;
+
+        this.startAppAd = startAppAd;
     }
 
 
@@ -29,7 +29,7 @@ public class MyMainGame extends Game{
     public void create() {
 
         spriteBatch = new SpriteBatch();
-        mainGameScreen = new MainGameScreen(this);
+        mainGameScreen = new MainGameScreen(this, startAppAd);
         startScreen = new StartScreen(this);
         this.setScreen(mainGameScreen);
 

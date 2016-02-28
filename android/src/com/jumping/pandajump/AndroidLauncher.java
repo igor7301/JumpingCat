@@ -60,7 +60,9 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 
         //представление для LibGDX
-        game = new MyMainGame(this);
+
+
+        game = new MyMainGame(this, new StartAppAd(this));
         gameView = initializeForView(game, config);
 
         //представление и настройка AdMob
@@ -158,6 +160,8 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
 
         StartAppSDK.init(this, "106159305", "201775773", true);
         StartAppAd.showSplash(this, savedInstanceState);
+
+
 
     }
 

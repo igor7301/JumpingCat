@@ -14,8 +14,10 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.startapp.android.publish.StartAppAd;
 
-public class MainGameScreen implements Screen, InputProcessor {
+public class MainGameScreen implements Screen{
+//public class MainGameScreen implements Screen, InputProcessor {
 
     private OrthographicCamera cam;
     private final StretchViewport viewport;
@@ -46,6 +48,7 @@ public class MainGameScreen implements Screen, InputProcessor {
     private int numberClickOnAd;
     private boolean gameWin;
     private Game game;
+    private StartAppAd startAppAd;
 
 
     public IActivityRequestHandler getMyRequestHandler() {
@@ -163,8 +166,9 @@ public class MainGameScreen implements Screen, InputProcessor {
     }
 
 
-    public MainGameScreen(final MyMainGame game) {
+    public MainGameScreen(final MyMainGame game, StartAppAd startAppAd) {
         this.game = game;
+        this.startAppAd = startAppAd;
         myRequestHandler  = game.getRequestHandler();
 
         cam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -210,8 +214,8 @@ public class MainGameScreen implements Screen, InputProcessor {
 
         stage.addActor(textOnScreenActor);
 
-        Gdx.input.setInputProcessor(this);
-        Gdx.input.setCatchBackKey(true);
+//        Gdx.input.setInputProcessor(this);
+//        Gdx.input.setCatchBackKey(true);
 
         init();
     }
@@ -355,11 +359,12 @@ public class MainGameScreen implements Screen, InputProcessor {
 
 
         } else {
-//
-//            if (gameOver) {
-//                    myRequestHandler.showAdMobInterstitial();
-//
-//            }
+
+            if (gameOver) {
+                startAppAd.loadAd();
+                startAppAd.showAd();
+
+            }
             if (Gdx.input.justTouched()) {
 
                 //если игра не закончена
@@ -367,7 +372,9 @@ public class MainGameScreen implements Screen, InputProcessor {
                     gameIsRunning = true;
 
                 } else {
+
                     init();
+
                     //игра закончена показываем рекламу
 
                    // myRequestHandler.showAdMobInterstitial();
@@ -467,48 +474,48 @@ public class MainGameScreen implements Screen, InputProcessor {
     }
 
 
-    @Override
-    public boolean keyDown(int keycode) {
-        if(keycode == Input.Keys.BACK){
-                game.setScreen(((MyMainGame) game).getStartScreen());
-        }
-
-        return false;
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-
-        return false;
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return false;
-    }
-
-    @Override
-    public boolean scrolled(int amount) {
-        return false;
-    }
+//    @Override
+//    public boolean keyDown(int keycode) {
+//        if(keycode == Input.Keys.BACK){
+//                game.setScreen(((MyMainGame) game).getStartScreen());
+//        }
+//
+//        return false;
+//    }
+//
+//    @Override
+//    public boolean keyUp(int keycode) {
+//        return false;
+//    }
+//
+//    @Override
+//    public boolean keyTyped(char character) {
+//        return false;
+//    }
+//
+//    @Override
+//    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+//        return false;
+//    }
+//
+//    @Override
+//    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+//        return false;
+//    }
+//
+//    @Override
+//    public boolean touchDragged(int screenX, int screenY, int pointer) {
+//
+//        return false;
+//    }
+//
+//    @Override
+//    public boolean mouseMoved(int screenX, int screenY) {
+//        return false;
+//    }
+//
+//    @Override
+//    public boolean scrolled(int amount) {
+//        return false;
+//    }
 }
