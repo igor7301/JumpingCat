@@ -29,13 +29,9 @@ public class MyMainGame extends Game{
     public void create() {
 
         spriteBatch = new SpriteBatch();
-
-
-
-
         mainGameScreen = new MainGameScreen(this);
         startScreen = new StartScreen(this);
-        this.setScreen(startScreen);
+        this.setScreen(mainGameScreen);
 
 
 

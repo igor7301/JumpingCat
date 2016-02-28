@@ -19,6 +19,9 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 
+import com.startapp.android.publish.StartAppAd;
+import com.startapp.android.publish.StartAppSDK;
+
 
 public class AndroidLauncher extends AndroidApplication implements IActivityRequestHandler {
 
@@ -38,6 +41,7 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
     private boolean clickOnAd;
     private boolean adClosed;
     private Game game;
+
 
 
 
@@ -150,11 +154,17 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
 
         //всё соединяем в одной слое
         setContentView(layout);
+
+
+        StartAppSDK.init(this, "106159305", "201775773", true);
+        StartAppAd.showSplash(this, savedInstanceState);
+
     }
 
     public boolean getFailedToLoadInterstitialAd() {
         return failedToLoadInterstitialAd;
     }
+
 
     protected Handler handler = new Handler() {
 

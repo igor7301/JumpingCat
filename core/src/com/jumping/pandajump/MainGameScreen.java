@@ -367,9 +367,10 @@ public class MainGameScreen implements Screen, InputProcessor {
                     gameIsRunning = true;
 
                 } else {
+                    init();
                     //игра закончена показываем рекламу
 
-                    myRequestHandler.showAdMobInterstitial();
+                   // myRequestHandler.showAdMobInterstitial();
 
                     //возомновлем игру лмбо сначала либо стобого мета где закончили  методе resume()
                     //если юзер нажал на рекламу (но не более одного раза за активную игру)

@@ -55,8 +55,8 @@ public class TextOnScreenActor extends CustomActor {
 
 
                 if (screen.getNumberClickOnAd() < screen.getAmountOfCountinueWithAdvertising() && !screen.getMyRequestHandler().getFailedToLoadInterstitialAd()) {
-                    infoFont.draw(batch, "To continue from HERE", 15f * SCREEN_WEIDHT / 100, 20f * SCREEN_HEIGHT / 100);
-                    infoFont.draw(batch, "click on advertising", 22f * SCREEN_WEIDHT / 100, 15f * SCREEN_HEIGHT / 100);
+                   // infoFont.draw(batch, "To continue from HERE", 15f * SCREEN_WEIDHT / 100, 20f * SCREEN_HEIGHT / 100);
+                   // infoFont.draw(batch, "click on advertising", 22f * SCREEN_WEIDHT / 100, 15f * SCREEN_HEIGHT / 100);
 
                 }
             } else {
