@@ -8,7 +8,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.google.android.gms.ads.AdListener;
@@ -35,7 +37,7 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
 
     private boolean clickOnAd;
     private boolean adClosed;
-    private MainGame mainGame;
+    private Game game;
 
 
 
@@ -54,8 +56,8 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 
         //представление для LibGDX
-        mainGame = new MainGame(this);
-        gameView = initializeForView(mainGame, config);
+        game = new MyMainGame(this);
+        gameView = initializeForView(game, config);
 
         //представление и настройка AdMob
 //        AdView adView = new AdView(this, AdSize.BANNER, "ваш_ID_в_AdMob");
@@ -126,7 +128,9 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
                 }
 
                 failedToLoadInterstitialAd = true;
-               mainGame.resume();
+
+                ((MyMainGame) game).getMainGameScreen().resume();
+                game.setScreen(((MyMainGame) game).getMainGameScreen());
 
 
             }

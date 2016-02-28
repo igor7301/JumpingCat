@@ -1,48 +1,29 @@
 package com.jumping.pandajump;
 
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
 import java.util.Random;
 
 /**
  * Created by ikomarov on 08.02.2016.
  */
-public class Ground  {
+public class Ground  extends CustomActor {
 
-    private float x;
-    private float y;
-    Rectangle rectangle = new Rectangle();
     boolean roofCompleted;
-    TextureRegion textureRegion;
 
 
     public Ground(TextureRegion textureRegion) {
-       this.textureRegion = textureRegion;
+        super(textureRegion);
     }
 
-
-    public float getX() {
-        return x;
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+        batch.draw (getTextureRegion(), getX(), getY());
     }
 
-    public Ground setX(float x) {
-        this.x = x;
-        return this;
-    }
-
-    public void decreaseX(float x) {
-        this.x -= x;
-    }
-
-    public float getY() {
-        return y;
-    }
-
-    public Ground setY(int y) {
-        this.y = y;
-        return this;
-    }
 
     public static int getRandomY(int screenHeight) {
         //переводим проценты в пиксели
@@ -57,9 +38,7 @@ public class Ground  {
         return minY + rand;
     }
 
-    public Rectangle getRectangleBounds() {
-        return rectangle;
-    }
+
 
 
 
@@ -71,23 +50,5 @@ public class Ground  {
         this.roofCompleted = roofCompleted;
     }
 
-    public void setRectangleBounds(float x, float y, float width, float height) {
-        this.rectangle.x = x;
-        this.rectangle.y = y;
-        this.rectangle.width = width;
-        this.rectangle.height = height;
 
-    }
-
-    public float getHeight() {
-        return textureRegion.getRegionHeight();
-    }
-
-    public float getWidth() {
-        return textureRegion.getRegionWidth();
-    }
-
-    public TextureRegion getTextureRegion() {
-        return textureRegion;
-    }
 }
