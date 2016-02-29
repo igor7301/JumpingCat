@@ -158,7 +158,7 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
         setContentView(layout);
 
 
-        StartAppSDK.init(this, "106159305", "201775773", true);
+        StartAppSDK.init(this, "106159305", "201925421", true);
         StartAppAd.showSplash(this, savedInstanceState);
 
 
